@@ -43,5 +43,64 @@
 		- Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
 		- The cache has a TTL of 5 minute.
 
+![Alt text](Application.png)
+
+- **DAX vs EastiCache**  
+	- DAX sits in front of Dynamo DB and is going to be helpful for individual object cache or queries, and scanned queries cache   
+	- Amazon ElastiCache is great to store aggregation result, say very big computation done on top of DynamoDB.  
+	- Both are not replacements but complimentary   
+	- For caching solution on top of DynamoDB it’s going to be DAX.  
+	- You can do stream processing on top of DynamoDB  
+  	
+- **DynamoDB - Stream Processing**  
+	- Ordered stream of item-level **modification** (create/update/delete) in a table.   
+	- 2 Kind of stream processing on DynamoDB   
+		- **DynamoDB Streams**   
+			- 24 hours retention   
+			- a limited number of consumers   
+			- Process using Lambda triggers or DynamoDB stream Kinesis (KCL) adapter (if you want to read it yourself).  
+		- **Kinesis Data stream**(newer)  
+			- send all your changes here   
+			- upto 1 year retention   
+			- higher number of consumers   
+			- Higher number of ways to process data using AWS Lambda, Kinesis data Analytics, Kinesis Data Firehose, AWS Glue Streaming ETL ….  
+	- **Use case** : 	
+        - React to changes in real-time (welcome email to users, whenever new user in user’s table)  
+		- Real-time usage analytics  
+		- Insert into derivatives table  
+		- Implement cross region replication  
+		- Invoke AWS Lambda on changes to your DynamoDB table.  
+
+![Alt text](<DynamoDB Streams.png>)
+
+- **DynamoDB Global Tables**
+	- Table replicated across multiple regions, so a table in us-east-1 and a table in ap-southeast-2 and there will be **2 way replication** between the tables.
+	- Make a DynamoDB table accessible with **low-latency** in multiple regions 
+	- Active-Active replication
+	- Applications can READ and WRITE to the table in any region.
+	- Must enable DynamoDB Streams as a pre-requisite. [Because this is the underlying infra to replicate the table across regions]
+
+- **DynamoDB TTL**
+	- **Use case**: reduce stored data by keeping only current items, adhere to regulatory obligations , **web session handling** (user logs to a website and has a session and keep the session in a central place, for 2 hours, this session data can be accessed by any kind of application, if within 2 hours the session is not renewed then the data is deleted) 
+
+
+- **DynamoDB - Backups for disaster recovery**
+	- **Continuous backups** using Point-in-time-recovery (**PITR**) - optionally enabled for **35** days, point-in-time recovery for any time within the backup window, the recovery process creates a new table.
+	- **On-demand backups** - Full backups for long term retention, until explicitly deleted, doesn’t affect performance or latency of the DynamoDB table, can be configured and managed in AWS backup service (enables cross-region copy, enables you to have lifecycle policies for your backup), recovery process creates a new table.
+
+
+- **DynamoDB - Integration with S3**
+	- **Export to S3** (must enable PITR)
+		- Works for any point of time in the last 35 days (because continuous backup is enabled)
+		- doesn’t affect the read capacity of your table or the performance
+		- Perform data analysis on top of DynamoDB
+		- Retain snapshots for auditing
+		- Do any big transformation like ETL on top of S3 data before importing back into DynamoDB
+		- Format of export in DynamoDB JSON or ION format.
+	- **Import from S3** (to DynamoDB)
+		- Import CSV, DynamoDB JSON, ION
+		- Doesn’t consume any write capacity.
+		- Create a new table
+		- If any errors then it will be logged in CloudWatch logs.
 
 </p>

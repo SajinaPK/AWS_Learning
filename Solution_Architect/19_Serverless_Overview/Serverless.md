@@ -1,6 +1,6 @@
 # Serverless in AWS
-  AWS Lambda  
-  Dynamo DB  
+  [AWS Lambda] (https://github.com/SajinaPK/AWS_Learning/blob/main/Solution_Architect/19_Serverless_Overview/Lambda.md#aws-lambda) 
+  [Dynamo DB] (https://github.com/SajinaPK/AWS_Learning/blob/main/Solution_Architect/19_Serverless_Overview/DynamoDB.md#amazon-dynamo-db)
   AWS Cognito  
   AWS API Gateway  
   Amazon S3  
