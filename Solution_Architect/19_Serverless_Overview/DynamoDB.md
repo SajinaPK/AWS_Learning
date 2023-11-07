@@ -2,14 +2,14 @@
 <p>
 
 - Fully managed, highly available with replication across multiple AZs  
-- NoSQL - not a relational DB - with transaction support  
-- Scales to massive workloads, distributed DB  
-- Millions of requests per second, trillions of row, 100s of TB of storage  
-- Fast and consistent in performance (single digit milliseconds)  
-- Integrated with IAM for security, authorization and administration  
-- Low cost and auto scaling capability  
-- No maintenance or patching, always available  
-- Standard and Infrequent Access (IA) Table class  
+  NoSQL - not a relational DB - with transaction support  
+  Scales to massive workloads, distributed DB  
+  Millions of requests per second, trillions of row, 100s of TB of storage  
+  Fast and consistent in performance (single digit milliseconds)  
+  Integrated with IAM for security, authorization and administration  
+  Low cost and auto scaling capability  
+  No maintenance or patching, always available  
+  Standard and Infrequent Access (IA) Table class  
 
 - **DynamoDB Basics**
     - Dynamo DB is made of **Tables**. [No need to create a DB, the DB is available as a service]  
