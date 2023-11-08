@@ -69,7 +69,9 @@
 		- Real-time usage analytics  
 		- Insert into derivatives table  
 		- Implement cross region replication  
-		- Invoke AWS Lambda on changes to your DynamoDB table.  
+		- Invoke AWS Lambda on changes to your DynamoDB table. 
+
+**DynamoDB Streams** allows you to capture a time-ordered sequence of item-level modifications in a DynamoDB table. It's integrated with AWS Lambda so that you create triggers that automatically respond to events in real-time. 
 
 ![Alt text](<images/DynamoDB Streams.png>)
 

@@ -38,3 +38,7 @@
 
 So in this diagram we see that web/mobile users can access the S3 bucket and DynamoDB table with the temporary credentials without going through API Gateway or ALB.
 
+![Alt text](images/CIP_2.png)
+
+In the above diagram, the condition is saying that the leading key for DynamoDB must be equal to the Cognito Identity user ID.  
+The user with this policy cannot read and write all the items in your DynamoDB table, thats too much power, so instead they can only deal with items that they have access to through this condition.  
