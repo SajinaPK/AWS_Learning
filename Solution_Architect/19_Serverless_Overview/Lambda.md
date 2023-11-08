@@ -38,13 +38,13 @@ Case 1: **Serverless Thumbnail Creation**
 
 A reactive architecture to the events of a new image being created in S3.  
 
-![Alt text](<Example Serverless Thumbnail creation.png>)
+![Alt text](<images/Example Serverless Thumbnail creation.png>)
 
 Case 2: **Serverless CRON Job**  
 
 So this is a server less architecture and you don’t have to waste EC2 instances which will need to run continuously.  
 
-![Alt text](<Example Serverless CRON Job.png>)
+![Alt text](<images/Example Serverless CRON Job.png>)
 
 
 ## AWS Lambda Limits
@@ -102,4 +102,4 @@ So this is a server less architecture and you don’t have to waste EC2 instance
 	- Send notifications to SNS or subscribe to events using EventBridge.  
 	- From SNS send to SQS or Lambda functions and from EventBridge to so many different destinations including Lambda functions.  
 
-![Alt text](Instance-1.png)
+![Alt text](images/Instance-1.png)

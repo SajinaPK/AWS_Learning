@@ -43,7 +43,7 @@
 		- Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
 		- The cache has a TTL of 5 minute.
 
-![Alt text](Application.png)
+![Alt text](images/Application.png)
 
 - **DAX vs EastiCache**  
 	- DAX sits in front of Dynamo DB and is going to be helpful for individual object cache or queries, and scanned queries cache   
@@ -71,7 +71,7 @@
 		- Implement cross region replication  
 		- Invoke AWS Lambda on changes to your DynamoDB table.  
 
-![Alt text](<DynamoDB Streams.png>)
+![Alt text](<images/DynamoDB Streams.png>)
 
 - **DynamoDB Global Tables**
 	- Table replicated across multiple regions, so a table in us-east-1 and a table in ap-southeast-2 and there will be **2 way replication** between the tables.
