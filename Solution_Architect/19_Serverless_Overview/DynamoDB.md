@@ -81,6 +81,7 @@
 	- Active-Active replication
 	- Applications can READ and WRITE to the table in any region.
 	- Must enable DynamoDB Streams as a pre-requisite. [Because this is the underlying infra to replicate the table across regions]
+	- DynamoDB Streams enable DynamoDB to get a **changelog** and use that changelog to replicate data across replica tables in other AWS Regions.
 
 - **DynamoDB TTL**
 	- **Use case**: reduce stored data by keeping only current items, adhere to regulatory obligations , **web session handling** (user logs to a website and has a session and keep the session in a central place, for 2 hours, this session data can be accessed by any kind of application, if within 2 hours the session is not renewed then the data is deleted) 
