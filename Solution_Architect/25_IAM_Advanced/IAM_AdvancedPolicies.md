@@ -25,4 +25,28 @@
     (Second applies to objects within a bucket **object level permissions**, so the arn will have /* to represent all the objects within your buckets. arn:aws:s3:::test/*)  
 
 - **Resource Policies & aws:PrincipalOrgID**
-    - aws:PrincipalOrgID can be used in any resource policies to restrict access to accounts that are member of an AWS Organization. 
+    - aws:PrincipalOrgID can be used in any resource policies to restrict access to accounts that are member of an AWS Organization.
+    ![Alt text](images/PrincipalOrg_Condition.png)
+    (Note the PrincipalOrgID in the policy)
+
+# IAM Roles Vs Resource Based Policies
+
+- **Cross Account**:
+    - attaching a resource based policy to a resource example S3 bucket policy.
+    - OR using a role as a proxy
+
+    ![Alt text](images/IAM_Vs_ResourcePolicy.png)
+
+    - **When you assume a role (user, application or service), you give up your original permissions and take permissions assigned to the role.**
+    - When using resource based policy, the principal doesnt have to give up his permissions.
+    - Ex: User in account A needs to scan a DynamoDB table in Account A and dump it in an S3 bucket in Account B. In this case resource based policy is good because we can do both scan the table and write to S3.
+    - Resource based policy is supported by: S3, SNS, SQS, Lambda etc.
+
+- **EventBridge - Security**
+    - When an EventBridge rule runs, the rule needs permissions on the target. There are 2 kinds of target:
+        - Resource-based policy: Lambda, SNS, SQS, CloudWatch Logs, API Gateway
+        - IAM role: Kinesis stream, Systems Manager Run command, ECS task ..
+
+    ![Alt text](images/EventBridge_Security.png)  
+
+IAM condition key you can use only to allow API calls to a specified AWS region? - **aws:RequestedRegion**
