@@ -46,7 +46,7 @@ Docker container mgmt on AWS - ECS (container platform), EKS (managed Kubernetes
 		- Use different roles for different ECS services you run. Ex EC2 task role can allow you to run API calls against S3, another EC2 task role may allow to run API against DynamoDB.
 		- define the task role in the **task definition** of the **ECS service**.
 
-- **Load Balance Integrations** 
+- **Load Balancer Integrations** 
     - If all the ECS tasks are running in a ECS cluster and we want to expose these tasks as HTTP(or HTTPS) endpoints, then we can run an application load balancer in front of it, and all users will be going to this ALB and in the back end to the ECS tasks directly.
 	- Network Load Balancer - recommended only for high throughput/ high performance use cases, or to pair with AWS private link.
 	- Classic Load Balancer - supported not recommended (no advance features, no Fargate)
