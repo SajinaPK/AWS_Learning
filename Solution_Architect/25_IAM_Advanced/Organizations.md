@@ -1,14 +1,14 @@
 # AWS Organization
 
-  - Global Service
-  - Allows to manage multiple AWS accounts
-  - The main account is the **management account**
-  - Other accounts created from main accounts are **member accounts**
-  - Member accounts can only be part of one organization
-  - Consolidated Billing accross all accounts - single payment method
-  - Pricing benefits from aggregated usage (volume discount for EC2, S3...)
-  - **Shared reserved instances and saving plans accross accounts**
-  - API is available to automate AWS account creation.
+- Global Service
+- Allows to manage multiple AWS accounts
+- The main account is the **management account**
+- Other accounts created from main accounts are **member accounts**
+- Member accounts can only be part of one organization
+- Consolidated Billing accross all accounts - single payment method
+- Pricing benefits from aggregated usage (volume discount for EC2, S3...)
+- **Shared reserved instances and saving plans accross accounts**
+- API is available to automate AWS account creation.
 
   ![Alt text](images/Organization.png)
   ![Alt text](images/OU_Example.png)
@@ -33,4 +33,5 @@
 
   ![Alt text](images/SCP_Examples.png)
   (For a **Block List** we first attach an Allow star, and then we attach a deny like above deny access to DynamoDB)  
-  (For **Allow List** we only allow, like in above example only allow EC2 and CloudWatch. Needs explicit allow to use resources)  
+  (For **Allow List** we only allow, like in above example only allow EC2 and CloudWatch. Needs explicit allow to use resources)
+  
