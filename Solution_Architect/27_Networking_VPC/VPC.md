@@ -120,4 +120,98 @@
   - If the NAT instance through which the IP traffic is routed goes down then the target of the route becomes a **Blackhole** 
   - We can remove the NAT instances and replace them with NAT Gateway in the routes wherever applicable.
 
+# VPC Peering
 
+  - Privately connect 2 VPCs (in diff region/diff account) using AWS n/w
+  - Create VPC Peering connection between VPCs in different AWS accounts/regions.
+  - Make them behave as if they were in the same network
+  - Must not have overlapping CIDRs
+  - VPC Peering connection is **NOT transitive** (must be established for each VPC that need to communicate with one another). You have 3 VPCs A, B, and C. You want to establish a VPC Peering connection between all the 3 VPCs then you need to establish A-B, A-C abd B-C.
+  - Even with VPC peering you must **update route tables** in <u> each VPC's subnets </u> to ensure EC2 instances can communicate with each other.
+  - You can reference a security group in a peered VPC (works cross accounts - same region)
+    ![Alt text](images/VPC_Peer.png)  
+  (We dont have to specify source as CIDR on IP but instead we can refer a security group)
+
+
+# VPC Endpoints (PrivateLink)
+
+  - Usage of VPC endpoints.  
+    ![Alt text](images/VPC_Endpoint.png)  
+  (In the above example if we want to connect to the SNS service, then we can through NAT gateway from the private subnet and then IGW(Internet Gateay) or if from public subnet then directly with IGW)  
+  (But there is cost associated with NAT Gateway, IGW is free. There are also multiple hops so not very efficient.)
+  (VPC Endpoint is another way of accessing the SNS service. The endpoint is powered by AWS PrivateLink)
+
+  - Every AWS service is publicly exposed (public URL)
+  - VPC Endpoints (powered by AWS PrivateLink) allows you to connect to AWS services using a **private network** instead of using the public network.
+  - The're redundant and scale horizaontally
+  - They remove the need of IGW, NATGW, .. to access AWS services
+  - In case of issues:
+    - Check DNS Setting resolution in your VPC
+    - Check Route tables
+
+- **Types of Endpoints**
+    - **<u>Interface Endpoints (powered by PrivateLink)</u>**
+        - Provision an ENI (private IP address) as an entry point (must attach a Security Group)
+        - Supports most AWS services
+        - $per hour + $per GB of data processed.
+    - **<u>Gateway Endpoints</u>**
+        - Provisions a gateway and must be used <u> as a target in a route table (does not use security group, or IP address)</u>
+        - **Supports both S3 and DynamoDB**
+        - **Free**
+    - **Gateway or Interface Endpoint of S3?**
+        - Gateway is most likely going to be preferred all the time at the exam.
+        - Cost: free for Gateway, $ for interface endpoint
+        - We just have to modify a route table for Gateway. Also it scales more.
+        - Interface Endpoint is preferred only when - private access is required from on-prem data centre(Site to Site VPN or Direct Connect), a different VPC or a different region.
+    ![Alt text](images/EndPoint.png)
+    - When using VPC Endpoints, what are the only two AWS services that have a Gateway Endpoint available? S3 and DynamoDB are the two services which have a VPC Gateway Endpoint (remember it), all the other ones have an Interface endpoint (powered by Private Link - means a private IP).
+
+# VPC Flow Logs
+
+  - Capture infromation about IP traffic going into your interfaces:
+    - VPC Flow Logs
+    - Subnet Flow Logs
+    - Elastic Network Interface (ENI) Flow Logs
+  - Helps to monitor & troubleshoot connectivity issues
+  - Flow logs data can be sent to S3, CloudWatch Logs and Kinesis Data Firehose
+  - Captures network infomation from AWS managed interfaces too: ELB, RDS, ElastiCache, Redshift, WorkSpaces, NATGW, Transit Gateway..
+
+- **VPC Flow Log Syntax**
+    ![Alt text](images/VPCFlow_Syntax.png)
+    - srcaddr & dstaddr - help identify problematic IP
+    - srcport & dstport - help identify problematic ports
+    - Action - success or failure of the request due to Security Group / NACL
+    - Can be used for analytics on usage patterns, or malicious behavior
+    - **Query VPC flow logs using Athena on S3 or CloudWatch Logs Insights**
+
+- **VPC Flow Logs - Troubleshoot SG and NACL issues**
+    - Incoming Requests
+        - Inbound REJECT -> NACL or SG
+        - Inbound ACCEPT, Outbound REJECT -> NACL (because if SG accepts then because its stateful it wont reject)
+    - Outbound Requests
+        - Outbound REJECT -> NACL or SG
+        - Outboud ACCEPT, Inbound REJECT -> NACL
+
+- **VPC Flow - Architectures**
+    ![Alt text](images/VPCFlowlog.png)
+    (1. The CloudWatch Contributor Insights can be used to find top 10 IP addresses that contribute to most network in ypur VPC or ENI)  
+    (2. In the second one, we can set a metric filter on CloudWatch logs to look for example for SSH or RDP protocols, and if we have more traffic from them then trigger an alarm)  
+    (3. In the third, the VPC flow logs in S3 can be analyzed with Athena and then visualize with QuickSight)  
+
+# VPC - Traffic Mirroring
+
+  - Allows you to capture and inspect network traffic in your VPC (in a non-intrisive manner)
+  - Route the traffic to security appliances that you manage
+  - Capture the traffic
+    - **From (Source)** - ENIs
+    - **To (Targets)** - an ENI or a network load balancer
+  - Capture all packets or capture the packets of your interest (optionally, truncate packets)
+  - Source and Target can be in the same VPC or different VPCs (VPC Peering)
+  - Use cases: content inspection, threat monitoring, troubleshooting from a n/w perspective,...
+
+    ![Alt text](images/TrafficMirror.png)  
+    (We have an EC2 instance and we have and ENI attached to it and there is internet access in/out)  
+    (We have a network load balancer with an Auto scaling group, with some security software on the EC2 instances)  
+    (To be able to capture all the traffic from source A without disrupting the functioning of source A we set a VPC traffic mirroring with optional filter)  
+    (With the traffic mirroring enabled, all traffic sent to ENI or source A is going to be sent the NLB, from where we can analyze the traffic)  
+    (We can add seccond EC2 instance to the same traffic mirroring feature.)  
