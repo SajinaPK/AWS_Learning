@@ -80,12 +80,21 @@
     - SDKs(JavaScript,Python,PHP,.NET,Ruby,Java,Go,Node.js, C++)
     - Mobile SDKs (Android, iOS, ...)
     - IoT Device SDKs (Embedded C, Arduino, ...)
-- Example: AWS CLI is built on AWS SDK for Python
+- Example: AWS CLI is built on AWS SDK for Python named Boto
+
+# AWS CloudShell
+
+- Alternative to using the terminal to issue commands against AWS.
+- CloudShell is not available in all regions. Can try in us-east-1.
+- All commands start with keyowrd *aws* and by default run in the same region you are currently in but can specify another region with "--region"
+- All files created within this shell environment will stay there until deleted.
+- There is a feature to upload/download files in CloudShell.
 
 # IAM Roles for Services
 
 - Some AWS service will need to perform actions on your behalf
 - To do so, we will assign **permissions** to AWS services with **IAM Roles**
+- IAM roles will be like users but they are intended for AWS services and not physical users/people.
 - Common roles:
     - EC2 Instance Roles
     - Lambda Function Roles

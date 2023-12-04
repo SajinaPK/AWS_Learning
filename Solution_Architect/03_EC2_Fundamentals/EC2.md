@@ -30,6 +30,14 @@
         - Anything you can think of
     - The EC2 User Data Script runs with the **root user**
 
+- **Notes**
+    - In order to use SSH to access your EC2 instance, create a key pair and attach it to the instance when creating it
+    - As a n/w rule in the security group, created by the console directly called launch-wizard-1, we need to allow SSH from anywhere.
+    - Also we can allow HTTP traffic from the internet if we want to.
+    - For EBS volumes attached with the EC2 instance you can enable delete on termination option.
+    - If you stop and then restart the instance the Public IP may change, Private IP will remain same
+    - Never enter your IAM API key, the Access Key ID and the Secret Access key into an EC2 Instance (with aws configure command) instead use IAM roles.
+
 # EC2 Instance 
 
 - AWS has the following naming convention: **m5.2xlarge**
@@ -75,20 +83,14 @@
 
 ![Alt text](images/InstanceExample.png)
 
-- **Classic Ports to know**
-    - 22 = SSH (Secure Shell) - log into a Linux instance
-    - 21 = FTP (File Transfer Protocol) – upload files into a file share
-    - 22 = SFTP (Secure File Transfer Protocol) – upload files using SSH
-    - 80 = HTTP – access unsecured websites
-    - 443 = HTTPS – access secured websites
-    - 3389 = RDP (Remote Desktop Protocol) – log into a Windows instance
-
 - **EC2 Instance Connect**
-    - Connect to your EC2 instance within your browser
+    - Connect to your EC2 instance within your browser with SSH
     - No need to use your key file that was downloaded
+    - Will upload a temporary SSH key to establish a connection.
     - The “magic” is that a temporary key is uploaded onto EC2 by AWS
     - **Works only out-of-the-box with Amazon Linux 2**
     - Need to make sure the port 22 is still opened!
+    - Need to use the default ec2-user
 
 - **EC2 Instances Purchasing Options**
 
@@ -166,6 +168,43 @@
         - **Dedicated Hosts**: We book an entire building of the resort
         - **Capacity Reservations**: you book a room for a period with full price even you don’t stay in it
 
+    - **EC2 Spot Instance Requests**
+        - Can get a discount of up to 90% compared to On-demand
+        - Define **max spot price** and get the instance while **current spot price < max**
+        - The hourly spot price varies based on offer and capacity
+        - If the current spot price > your max price you can choose to **stop or terminate** your instance with a **2 minutes grace period**.
+        - Other strategy: **Spot Block**
+            - “block” spot instance during a specified time frame (1 to 6 hours) without interruptions
+            -  In rare situations, the instance may be reclaimed
+            - Is deprecated now.
+        - **Used for batch jobs, data analysis, or workloads that are resilient to failures.**
+        - **Not great for critical jobs or databases**
+        - Spot prices vary on AZ.
+
+    - **How to terminate spot instance**
+    ![Alt text](images/TerminateSpot.png)
+    (If the request type is **persistent**, that means that we want this number of instances to be valid as long as the spot request is valid from to valid until. That means that if somehow your instances do get stopped or interrupted based on the spot price, then your spot request will go back into action and when things can be validated, AWS will restart spot instances for you)  
+    (If you want to cancel a spot request, it needs to be in the **open state, the active state, or the disabled state**)  
+    (That means that basically it's not failed, it's not canceled, or it's not closed)  
+    (When you want to cancel a spot request, it's not going to terminate any instances)  
+    (It is still your responsibility to **terminate these instances** and not the responsibility of AWS)  
+    (So if you want to terminate spot instances for good and not have them relaunch, you need to first cancel the spot request and then you terminate the associated spot instances)  
+    (Because if you were to terminate the spot instances first, it goes back into the spot request, and then re-launch the instance)  
+
+    - **Spot Fleets**
+        - Spot Fleets = set of Spot Instances + (optional) On-Demand Instances
+        - The Spot Fleet will try to meet the target capacity with price constraints
+            - Define possible launch pools: instance type (m5.large), OS, Availability Zone
+            - Can have multiple launch pools, so that the fleet can choose the best and most appropriate launch pool.
+            - Spot Fleet stops launching instances when reaching capacity or max cost
+        - Strategies to allocate Spot Instances:
+            - **lowestPrice**: from the pool with the lowest price (cost optimization, short workload)
+            - **diversified**: distributed across all pools (great for availability, long workloads)
+            - **capacityOptimized**: pool with the optimal capacity for the number of instances
+            - **priceCapacityOptimized (recommended)**: pools with highest capacity available, then select the pool with the lowest price (best choice for most workloads)
+        - <u>Spot Fleets allow us to automatically request Spot Instances with the lowest price</u>
+        -  A very simple spot instance request where you know exactly the type of instance you want and the AZ you want Vs using a spot fleet and saying, "you can choose all these instance types and all these AZ, and what I need is to get the lowest price, for ex"
+
 # Security Groups
 
 - Security Groups are the fundamental of network security in AWS
@@ -190,7 +229,7 @@
     - Can be attached to multiple instances
     - Locked down to a **region / VPC** combination
     - Does live “outside” the EC2 – if traffic is blocked the EC2 instance won’t see it
-    - It’s good to maintain one separate security group for SSH access
+    - *It’s good to maintain one separate security group for SSH access*
     - If your application is not accessible (**time out**), then it’s a security group issue
     - If your application gives a “**connection refused**“ error, then it’s an application error or it’s not launched
     - All inbound traffic is **blocked** by default
