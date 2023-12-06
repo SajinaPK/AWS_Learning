@@ -87,6 +87,7 @@
 
   - If we want to connect AWS to corporate data centre using a private connection, there will be a customer gateway at the data centre and VPN gateway on the VPC side. We then establish through public internet a private site-to-site VPN connection.
   - Its a VPN connection so its encrypted but goes over public internet.
+  - You can access the interface VPC endpoint from on-premises environments or other VPCs using AWS VPN, AWS Direct Connect, or VPC peering.
   - Needs 2 things:
     - **Virtual Private Gateway(VGW)**
         - VPN concentrator on the AWS side of the VPN connection
@@ -108,6 +109,8 @@
     - Low-cost hub-and-spoke model for primary or secondary network connectivity between different locations (VPN only). Establish a site-to-site VPN between CGW and one single VGW within your VPC.
     - Its a VPN connection so it goes over the public Internet and is encrypted.
     - To set it up, connect multiple VPN connection on the same VGW, setup dynamic routing and configure route tables.
+    - This enables your remote sites to communicate with each other, and not just with the VPC
+    - Sites that use AWS Direct Connect connections to the virtual private gateway can also be part of the AWS VPN CloudHub.
     ![Alt text](images/VPNCloudHub.png)
 
 # Direct Connect (DX)
@@ -121,6 +124,7 @@
     - Hybrid Environment (on-prem + cloud)
   - Supports both IPv4 and IPv6
   - You need to set up a dedicated connection between your on-premises corporate datacenter and AWS Cloud. This connection must be private, consistent, and traffic must not travel through the Internet. Which AWS service should you use? AWS Direct Connect.
+  - AWS Direct Connect does not involve the Internet; instead, it uses dedicated, private network connections between your intranet and Amazon VPC
 
 ![Alt text](images/DirectConnect.png)
 (We have a region and we want to connect to our data centre)  
@@ -141,6 +145,23 @@
   (For this we will establish a Direct Connect connection, then using private VIF, connect to the Direct Connect Gateway)  
   (This Direct Connect Gateway will have a private virtual interface into the Virtual Private Gateway in both regions)  
 
+- **Direct Connect Virtual Interface**
+  - Direct Connect provides three types of virtual interfaces: **public, private, and transit**.
+  - **Public Virtual Interface** 
+    - To connect resources reachable with public IP like S3
+    - To connect to all public IP address globally
+    - To access publicly routable services in any region.
+    - To receive Amazon's global IP routes from the public interfaces in Direct Connect locations.
+  - **Private Virtual Interface** 
+    - To connect to resources hosted on Amazon VPC using private IP
+    - To connect to multiple Amazon VPC's in any region because virtual private GW is associated with a single VPC.
+    - Connect private virtual interface to direct connect GW, and then associate this GW with one or more virtual private GW in any region.
+  - **Transit Virtual Interface** 
+    - To connect to resources hosted on Amazon VPC using private IP, through a transit GW. 
+    - To Connect multiple VPC in the same or different account using Direct Connect. 
+    - Associate upto 3 transit GW in any region when using this interface to connect to Direct Connect GW.
+    - Attach Amazon VPC in the same region to transit GW. Then access multiple VPC in different account in same region using transit virtual interface.
+
 - **Direct Connect - Connection Types**
   - **Dedicated Connecions**: 1Gbps, 10Gbps and 100Gbps capacity
     - Physical ethernet port dedicated to a customer
@@ -159,7 +180,7 @@
 
 - **Direct Connect - Resiliency**  
 ![Alt text](images/DirectConnectResiliency.png)  
-(For maximum resilinecy, there will still be 2 Direct Connect locations, but this time each will have 2 indpt connections. Total 4 connections across 2 locations, terminating on separate devices in more than one location.)
+(For maximum resilinecy, there will still be 2 Direct Connect locations, but this time each will have 2 independent connections. Total 4 connections across 2 locations, terminating on separate devices in more than one location.)
 
 - **Site-to-Site VPN connection as a Backup**
   - In case Direct Connect fails, you can set up a backup Direct Connect connection (expensive), or a Site-to-Site VPN connection.
@@ -167,12 +188,12 @@
   (If Primary connection fails then you will be connected through the public internet using Site-to-Site VPN which is more reliable because public internet may be always accessible.)  
 
 # Transit Gateway
-  - **For transitive peering between thousands of VPC and on-prem, hub-and-spoke (star) connection.
+  - **For transitive peering between thousands of VPC and on-prem, hub-and-spoke (star) connection.**
   - Regional resource, can work cross region
   - Share cross-account using Resource Access Manager (RAM)
   - You can peer Transit Gateways across regions
-  - Route tables: limit which VPC can talk with other VPC
-  - Works with Direct Connect Gateway, VPN connections
+  - Route tables: limit which VPC can talk with other VPC, includes dynamic and static route to decide next hop based on destination IP of packet.
+  - Works with Direct Connect Gateway, VPN connections, VPC, peering connection with another transit GW
   - Support **IP Multicast** (not supported by any other AWS service)
   ![Alt text](images/TransitGateway.png)
 

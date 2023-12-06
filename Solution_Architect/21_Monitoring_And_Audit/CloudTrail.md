@@ -12,7 +12,7 @@
   - If a resource is deleted in AWS, investigate CoudTrail first.  (it will have the API call details)
   
   ![Alt text](images/CloudTrail.png)
-  (All the actions of SDK, ClI etc will be in CloudTrail. We can inspect and Audit it)
+  (All the actions of SDK, CLI etc will be in CloudTrail. We can inspect and Audit it)  
   (If you want the events to be there for more than 90 days then send them to CloudWatch logs or to S3.)
 
 - **CloudTrail Events**

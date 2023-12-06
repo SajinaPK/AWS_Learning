@@ -35,16 +35,20 @@
 
 # Beanstalk
 
-- Elastic Beanstalk is a developer centric view of deploying an application on AWS
-- It re-uses all the component’s we’ve seen before: EC2, ASG, ELB, RDS, ...
-- Managed service
-    - Automatically handles capacity provisioning, load balancing, scaling, application health monitoring, instance configuration, ...
-    - Just the application code is the responsibility of the developer
-- We still have full control over the configuration of each component.
-- Comes bundled as a single interface.
-- Gives a way to update the applications
-- Beanstalk is free but you pay for the underlying instances
-- CloudFormation allows to create the resources behind the scenes for Beanstalk. And we can view this in the designer.
+- AWS Elastic Beanstalk is an easy-to-use service for deploying and scaling web applications and services developed with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker on familiar servers such as Apache, Nginx, Passenger, and IIS.
+- You can simply upload your code and Elastic Beanstalk automatically handles the deployment, from capacity provisioning, load balancing, auto-scaling to application health monitoring
+
+- **Basics**
+    - Elastic Beanstalk is a developer centric view of deploying an application on AWS
+    - It re-uses all the component’s we’ve seen before: EC2, ASG, ELB, RDS, ...
+    - Managed service
+        - Automatically handles capacity provisioning, load balancing, scaling, application health monitoring, instance configuration, ...
+        - Just the application code is the responsibility of the developer
+    - We still have full control over the configuration of each component.
+    - Comes bundled as a single interface.
+    - Gives a way to update the applications
+    - Beanstalk is free but you pay for the underlying instances
+    - CloudFormation allows to create the resources behind the scenes for Beanstalk. And we can view this in the designer.
 
 - **BeanStalk Components**
     - **Application**: collection of Elastic Beanstalk components (environments, versions, configurations, ...)

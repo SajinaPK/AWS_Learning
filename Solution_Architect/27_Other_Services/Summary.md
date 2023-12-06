@@ -130,6 +130,45 @@
 - Choose an optimal **Savings Plan** (to lower prices on your bill)
 - **Forecast usage up to 12 months based on previous usage**
 
+# AWS Compute Optimizer 
+
+- Recommends optimal AWS Compute resources for your workloads to reduce costs and improve performance by using machine learning to analyze historical utilization metrics
+- Helps you choose the optimal Amazon EC2 instance types, including those that are part of an Amazon EC2 Auto Scaling group, based on your utilization data.
+- Over-provisioning compute can lead to unnecessary infrastructure cost and under-provisioning compute can lead to poor application performance.
+- It does not recommend instance purchase options.
+
+# AWS Trusted Advisor 
+
+- No need to install anything - high level AWS account assessment
+- Analyze your AWS accounts and provides recommendation on 5 categories
+    <ol type="1">
+    <li>Cost optimization</li>
+    <li>Performance</li>
+    <li>Security</li>
+    <li>Fault Tolerance</li>
+    <li>Service Limits</li>
+    </ol>
+![Alt text](images/TrustedAdvisor.png)  
+- Checks for Amazon EC2 Reserved Instances that are scheduled to expire within the next 30 days or have expired in the preceding 30 days.
+
+- Trusted Advisor - Support Plans
+    - 7 Core checks on Basic & Developer plan
+        <ol type="1">
+            <li>S3 Bucket permissions - check Bucket is not public.</li>
+            <li>Security groups - Specific Ports Unrestricted (such as SSH on port 22)</li>
+            <li>IAM Use (One IAM user minimum)</li>
+            <li>MFA on root account</li>
+            <li>EBS public Snapshots - Check none are public</li>
+            <li>RDS Public Snapshot - check there are none</li>
+            <li>Service limits</li>
+        </ol>
+        - These top 6 checks fall under the category of security and under service limits we get a bunch of checks.
+    
+    - Full Check on Business and Enterprise Support Plan
+        - Full checks available on the 5 categories
+        - Ability to set CloudWatch alarms when reaching limits
+        - **Programmatic Access using <u> AWS Support API </u>**
+
 # AWS Elastic Transcoder
 
 - Elastic Transcoder is used to convert media files stored in S3 into media file formats required by customer playback devices (phones etc..)

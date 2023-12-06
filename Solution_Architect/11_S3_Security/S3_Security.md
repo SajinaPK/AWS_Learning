@@ -127,8 +127,11 @@
     - That data can be analyzed using data analysis tools...(for ex with Athena)
     - The target logging bucket must be in the same AWS region
     - The log format is at: https://docs.aws.amazon.com/AmazonS3/latest/dev/LogFormat.html
-    - When you enable server access logging, the S3 updates the bucket policy automatically to include access to the S3 logging service to put.
-    ![Alt text](images/AccessLogs.png)
+    - When you enable server access logging, the S3 updates the bucket policy automatically to include access to the S3 logging service to put.  
+    - Access log information can be useful in security and access audits
+    - It can also help you learn about your customer base and understand your Amazon S3 bill
+    -  AWS recommends that you use AWS CloudTrail for logging bucket and object-level actions for your Amazon S3 resources, as it provides more options to store, analyze and act on the log information.  
+    ![Alt text](images/AccessLogs.png)  
 
 - **S3 Access Logs:Warning**
     - Do not set your logging bucket to be the monitored bucket

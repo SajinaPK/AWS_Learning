@@ -1,5 +1,9 @@
 # CloudWatch
 
+- Monitoring and observability service built for DevOps engineers, developers, site reliability engineers (SREs), and IT managers
+- Provides you with data and actionable insights to monitor your applications, respond to system-wide performance changes, optimize resource utilization, and get a unified view of operational health
+- 
+
 - **CloudWatch Metrics**
     - CloudWatch provides metrics for **every** services in AWS.
     - **Metric** is a variable to monitor (for EC2 instance: CPUUtilization, NetworkIn..)
@@ -14,9 +18,9 @@
     - Continually stream CloudWatch metrics to a destination of your choice, with **near-real-time** and low latency.
         - Amazon Kinesis Data Firehose (and then its destinations)
         - 3rd party service provider: Datadog, Dynatrace, New Relic, Splunk, Sumo Logic...
-    ![Alt text](images/CloudWatchMetric.png)
-    (The metric streams can be put into Kinesis Data Firehose and then to S3 and then Athena can do analysis on the data in S3)
-    (or the data analysis can be done in s data warehouse like RedShift or in OpenSearch)
+    ![Alt text](images/CloudWatchMetric.png)   
+    (The metric streams can be put into Kinesis Data Firehose and then to S3 and then Athena can do analysis on the data in S3)  
+    (or the data analysis can be done in s data warehouse like RedShift or in OpenSearch)  
     - Option to **filter metrics** to only stream a subset of the metrics. (or stream all metrics in all namespaces)
 
 - **CloudWatch Logs**
@@ -44,6 +48,7 @@
     - Route53: log DNS queries made to its service
 
 - **CloudWatch Insights**
+    ![Alt text](images/CloudWatchInsights2.png)
     - **Query the CloudWatch logs**
     - Search and Analyze log data stored in CloudWatch logs.
     - Lots of sample queries provided as part of the console for Insights.
@@ -54,7 +59,7 @@
         - Can save queries and add them to CloudWatch dashboards.
     - Can query multiple Log groups in **Different AWS accounts**.
     - **Its a query engine, not a real time engine.** (only query historical data when you run the query)
-
+    ![Alt text](images/CloudWatchInsights1.png)
     - You write your query and specify a timeframe you want to apply your query to and the result will be shown as a visualization. You can also see the specific line that made the visualization,.
     - This visualization can be exported as a result or added to a dashboard for being able to re-run whenever needed.
 
@@ -69,15 +74,15 @@
     - **Subscription filter** - filter which logs or events delivered to your destination.
     ![Alt text](images/Logs_Subscription.png)  
   
-    ![Alt text](images/Logs_Aggregation.png)  
-
-    - **Cross-Account Subscription**: Use **destinations**. send log events to resources in a different AWS account (KDS,KDF)  
+    ![Alt text](images/Logs_Aggregation.png)   
   
     ![Alt text](images/Logs_CrossAccount.png)  
-    (There is sender and receiver account, CloudWatch subscription filter is created, which then gets sent to a **Subscription Destination**. Here the destination is a virtual representation of the Kinesis Data Stream in the recipient account.)
-    (Attach a **destination access policy** to allow the first account to send data into the destination.)
-    (Create **IAM role** in the recipient account, which has permission to send records into Kinesis Data Stream.)
-    (Make sure this IAM role can be assumed by the sender account)
+    (There's sender & receiver account, CloudWatch subscription filter is created, which then gets sent to a **Subscription Destination**)  
+    (Here the destination is a virtual representation of the Kinesis Data Stream in the recipient account.)  
+    (Attach a **destination access policy** to allow the first account to send data into the destination.)  
+    (Create **IAM role** in the recipient account, which has permission to send records into Kinesis Data Stream.)  
+    (Make sure this IAM role can be assumed by the sender account)  
+    - **Cross-Account Subscription**: Use **destinations**. send log events to resources in a different AWS account (KDS,KDF) 
 
 - **CloudWatch Logs for EC2**
     - By default, no logs are going from EC2 instance to CloudWatch.
@@ -118,6 +123,8 @@
 
 - **CloudWatch Alarm Targets**
     - Actions on EC2 instances - to stop, terminate, reboot or recover an instance
+        - You can use the stop or terminate actions to help you save money when you no longer need an instance to be running. 
+        - You can use the reboot and recover actions to automatically reboot those instances or recover them onto new hardware if a system impairment occurs.
     - Trigger an auto-scaling action
     - Send notifications to SNS (from which you can do a lot of things by hooking this to a Lambda function)
 
@@ -126,7 +133,7 @@
     - **Composite Alarms are monitoring states of multiple other alarms**, each of this alarm can be relying on different metrics.
     - AND and OR conditions
     - Helpful to reduce "alarm noise" by creating complex composite alarms.
-    - ex alert me when CPU is high anf Network is high also.
+    - ex alert me when CPU is high and Network is high also.
     ![Alt text](images/CompositeAlarm.png)
 
     - Ex. **EC2 Instance Recovery** - There is a status check for Instance Status (check the EC2 VM), System status (check the underlying   hardware)
@@ -149,7 +156,7 @@
         - EKS
         - Kubernetes platform on EC2
         - Fargate (for both ECS and EKS)
-    - In Amazon EKS and Kuberbnetes, CloudWatch Insights is using a containerized version of the CloudWatch Agent to discover containers.
+    - In Amazon EKS and Kubernetes, CloudWatch Insights is using a containerized version of the CloudWatch Agent to discover containers.
     - Extracts the metrics and logs out of our containers into a very detailed ans granular dashboard from within CloudWatch.
 
 - **CloudWatch Lambda Insights**

@@ -107,3 +107,26 @@
 - **IAM Access Advisor (user-level)**
     - Access advisor shows the service permissions granted to a user and when those services were last accessed.
     - You can use this information to revise your policies
+
+# Summary
+
+- You manage access in AWS by creating policies and attaching them to **IAM identities** (users, groups of users, or roles) or AWS resources. 
+- A policy is an object in AWS that, when associated with an identity or resource, defines their permissions. 
+- AWS evaluates these policies when an **IAM principal** (user or role) makes a request. 
+- Permissions in the policies determine whether the request is allowed or denied. 
+- Most policies are stored in AWS as JSON documents. 
+- AWS supports six types of **policies**:
+    - Identity-based policies
+    - Resource-based policies
+    - Permissions boundaries
+    - AWS Organizations service control policy (SCP)
+    - Access control list (ACL)
+    - Session policies.
+
+- A developer needs to implement an AWS Lambda function in AWS account A that accesses an S3 bucket in AWS account B.
+    - 1 - Create an IAM role for the Lambda function that also grants access to S3
+    - 2 - Set the IAM role as Lambda functions execution role
+    - 3 - Verify bucket policy grants access to Lambda's execution role.
+    - If IAM role is created in the same account as the bucket then no need to grant S3 permission on both IAM role and bucket policy
+    - But verify there is no explicit deny in the bucket policy for Lambda function
+    - If IAM role and bucket are in different accounts then set permission in bucket policy also.

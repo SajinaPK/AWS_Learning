@@ -26,6 +26,8 @@
 
 - Sometimes you want control over the EC2 Instance placement strategy
 - That strategy can be defined using placement groups
+- Use placement groups to influence the placement of a group of interdependent instances to meet the needs of your workload
+- If there are insufficient unique hardware to fulfill the request then the request fails and can be retried later.
 - When you create a placement group, you specify one of the following strategies for the group:
     - **Cluster** — clusters instances into a low-latency group in a single Availability Zone (high performance, high risk)
     - **Spread** — spreads instances across underlying hardware (max 7 instances per group per AZ)
@@ -39,12 +41,13 @@
     - **Use case**:
         - Big Data job that needs to complete fast
         - Application that needs extremely low latency and high network throughput
+    - A cluster placement group can span peered VPCs in the same Region
 
 - **Placement Groups - Spread**
     ![Alt text](images/PlacementGroup2.png)
     - **Pros**:
         - Can span across Availability Zones (AZ)
-        - Reduced risk is simultaneous failure
+        - Reduced risk of simultaneous failure
         - EC2 Instances are on different physical hardware
     - **Cons**:
         - Limited to 7 instances per AZ per placement group (Applications cannot be very very big)

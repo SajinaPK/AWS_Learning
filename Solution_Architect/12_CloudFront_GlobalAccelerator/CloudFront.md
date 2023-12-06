@@ -2,14 +2,16 @@
 
 - Content Delivery Network (CDN)
 - **Improves read performance, content is cached at the edge**
-- Improves users experience
+- Improves users experience (lower latency as content is cached all around the world)
 - 216 Point of Presence globally (edge locations)
 - **DDoS protection (because worldwide), integration with Shield, AWS Web Application Firewall**
+- CloudFront supports HTTP/RTMP protocol based requests
 
 - **Origins**
     - **S3 bucket**
         - For distributing files and caching them at the edge
-        - Enhanced security with CloudFront Origin Access Control (OAC) • OACisreplacingOriginAccessIdentity(OAI)
+        - Enhanced security with CloudFront Origin Access Control (OAC) (To guarantee than only CloudFront can access the bucket)
+        - OAC is replacing Origin Access Identity(OAI)
         - CloudFront can be used as an ingress (to upload files to S3)
     - **Custom Origin (HTTP)**
         - Application Load Balancer
@@ -18,10 +20,15 @@
         - Any HTTP backend you want
 
 - **CloudFront at a high level**
-![Alt text](images/CloudFrontHL.png)
+![Alt text](images/CloudFrontHL.png)  
+(We have an Origin and then edge location all around th world)  
+(When client sends a request to the edge location, the edge location will check its cache, if the cache doesnt have the content then it will fetch the resutlt from the origin and then cache the result locally for serving future requests)  
 
 - **S3 as an Origin**
-![Alt text](images/CloudFrontS3.png)
+![Alt text](images/CloudFrontS3.png)  
+(Users will get their content served through edge location but first edge location will get it from origin S3 bucket through private AWS n/w)  
+(The S3 bucket will be secured through Origin Access Control and by modifying the bucket policy at S3)  
+(Content from the S3 bucket in one region is distributed all around the world through edge locations or points of presence)
 
 - **CloudFront vs S3 Cross Region Replication**
     - CloudFront:
@@ -30,12 +37,21 @@
         - **Great for static content that must be available everywhere**
     - S3 Cross Region Replication:
         - Must be setup for each region you want replication to happen
-        - Files are updated in near real-time
+        - Files are updated in near real-time (no caching)
         - Read only
         - **Great for dynamic content that needs to be available at low-latency in few regions**
 
 - **ALB or EC2 as an origin**
-![Alt text](images/ALBorEC2.png)
+![Alt text](images/ALBorEC2.png)  
+(CloudFront can access any HTTP backend which includes and EC2 instance or ALB)  
+(We have an HTTP backend here on an EC2 instance)  
+(For users to access this through CloudFront, the edge locations will make request to the EC2 instance hence they **must** be public)  
+(The EC2 instances must be public, otherwise edge locations will not be able to access it, because there is not private VPC connectivity in CloudFront)  
+(We must have a security group on the EC2 instance that allows all the public IP of CloudFront. The list of IP can be found in AWS docs)  
+(The second approach is to access the EC2 private instances through a public ALB)  
+(The EC2 instances may be private because there is private VPC connection between ALB and EC2 instances)  
+(EC2 instance security group should allow security group of the ALB)  
+(The public IPs of the CloudFront should be allowed in the security group of ALB)  
 
 - **Geo Restriction**
     - You can restrict who can access your distribution
@@ -44,17 +60,11 @@
     - The “country” is determined using a 3rd party Geo-IP database
     - Use case: Copyright Laws to control access to content
 
-- **Global users for our application**
-    - You have deployed an application and have global users who want to access it directly.
-    - They go over the public internet, which can add a lot of latency due to many hops
-    - We wish to go as fast as possible through AWS network to minimize latency
-    ![Alt text](images/GlobalUsers.png)
-
 # Pricing
 
 - CloudFront Edge locations are all around the world
 - The cost of data out per edge location varies
-![Alt text](images/Pricing.png)
+![Alt text](images/Pricing.png)  
 
 - **Price Classes**
     - You can reduce the number of edge locations for **cost reduction**
@@ -62,32 +72,52 @@
         - 1 Price Class All: all regions – best performance
         - 2 Price Class 200: most regions, but excludes the most expensive regions
         - 3 Price Class 100: only the least expensive regions
-    ![Alt text](images/PriceClass.png)
+    ![Alt text](images/PriceClass.png)  
 
 #  Cache Invalidations
 
 - In case you update the back-end origin, CloudFront doesn’t know about it and will only get the refreshed content after the TTL has expired
 - However, you can force an entire or partial cache refresh (thus bypassing the TTL) by performing a **CloudFront Invalidation**
-- You can invalidate all files (*) or a special path (/images/*)
-![Alt text](images/CacheInvalidation.png)
+- You can invalidate all files ( * ) or a special path (/images/*)
+![Alt text](images/CacheInvalidation.png)  
+(There are 2 edge locations each has its own cache which contains index.html and the images)  
+(If TTL for the files is set to 1 day, and you updated the files in the S3 bucket(origin), then if you want the changes to the files reflected immidiately then you can invalidate the paths /index.html and /image/*)  
+(Then CloudFront tells the edge locations to invalidate the said files and the files are going to be removed from the cache)  
+(Next time user request these files edge locations will not find it in the cache and hence re-fetch from the origin)  
 
-# AWS Global Accelerato
+# AWS Global Accelerator
+
+- AWS Global Accelerator is a networking service that helps you improve the availability and performance of the applications that you offer to your global users
+- It provides **static IP addresses that provide a fixed entry point to your applications** and eliminate the complexity of managing specific IP addresses for different AWS Regions and Availability Zones (AZs)
+- Always routes user traffic to the optimal endpoint based on performance, reacting instantly to changes in application health, your user’s location, and policies that you configure.
+
+- **Global users for our application**
+    - You have deployed an application and have global users who want to access it directly.
+    - They go over the public internet, which can add a lot of latency due to many hops
+    - We wish to go as fast as possible through AWS network to minimize latency
+    ![Alt text](images/GlobalUsers.png)  
+    (If application is deployed in India and we have a public ALB, then users from around the world will access this over public internet)  
+    (The hops in the network can add a lot of latency, and the connections can get lost in between and not directly within AWS infra)  
 
 - **Unicast IP vs Anycast IP**
     - Unicast IP: one server holds one IP address
     - Anycast IP: all servers hold the same IP address and the client is routed to the nearest one
-    ![Alt text](images/Unicast_Anycast.png)
+    ![Alt text](images/Unicast_Anycast.png)  
 
 - **Global Accelerator**
     - Leverage the AWS internal network to route to your application
     - **2 Anycast IP** are created for your application
-    - The Anycast IP send traffic directly to Edge Locations
+    - The Anycast IP send traffic directly to Edge Locations (closest to theuser)
     - The Edge locations send the traffic to your application
-    ![Alt text](images/GlobalAccelerator.png)
+    - The global accelerator is created by default in us-west(Oregon)
+    ![Alt text](images/GlobalAccelerator.png) 
+    (Here instead of accessing the application deployed in India directly over public internet, its accessed via edge locations)  
+    (From the edge location to the ALB its the AWS internal network, so more stable, less latency)  
+    
     - Works with **Elastic IP, EC2 instances, ALB, NLB, public or private**
     - Consistent Performance
-        - Intelligent routing to lowest latency and fast regional failover
-        - No issue with client cache (because the IP doesn’t change)
+        - Intelligent routing to lowest latency(edge location) and fast regional failover
+        - No issue with client cache (client doesnt cache anything) (because the IP doesn’t change)
         - Internal AWS network
     - Health Checks
         - Global Accelerator performs a health check of your applications

@@ -84,3 +84,47 @@ AWS owns and maintains the network connected hardware required for these applica
 - MSSQL Server: 1433
 - MariaDB: 3306 (same as MySQL)
 - Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
+
+**AWS services that can be used for buffering or throttling to handle sudden traffic spikes**  
+- **Throttling** is the process of limiting the number of requests an authorized program can submit to a given operation in a given amount of time.
+- **Amazon API Gateway**
+  - Amazon API Gateway throttles requests to your API using the token bucket algorithm, where a token counts for a request.
+  - API Gateway sets a limit on a steady-state rate and a burst of request submissions against all APIs in your account
+  - In the token bucket algorithm, the burst is the maximum bucket size.
+- **Amazon SQS**
+  - Offers buffer capabilities to smooth out temporary volume spikes without losing messages or increasing latency.
+- **Amazon Kinesis** 
+  - Amazon Kinesis is a fully managed, scalable service that can ingest, buffer, and process streaming data in real-time.
+
+- **Services which does not help with buffering/Throttling**
+  - **SNS** cannot buffer messages and is generally used with SQS to provide the buffering facility.
+  - **Lambda** When requests come in faster than your Lambda function can scale, or when your function is at maximum concurrency, additional requests fail as the Lambda throttles those requests with error code 429 status code.
+
+**Blue/green deployment**
+- <span style="color:blue">Blue</span>/<span style="color:green">green</span> deployment is a technique for releasing applications by shifting traffic between two identical environments running different versions of the application: "Blue" is the currently running version and "green" the new version.
+- This type of deployment allows you to test features in the green environment without impacting the currently running version of your application.
+- When you’re satisfied that the green version is working properly, you can gradually reroute the traffic from the old blue environment to the new green environment.
+- Blue/green deployments can mitigate common risks associated with deploying software, such as downtime and rollback capability.
+
+  - **AWS Global Accelerator** 
+    - uses **endpoint weights** to determine the proportion of traffic that is directed to endpoints in an endpoint group, and **traffic dials** to control the percentage of traffic that is directed to an endpoint group (an AWS region where your application is deployed).
+    - you can shift traffic gradually or all at once between the blue and the green environment and vice-versa without being subject to **DNS caching** on client devices and internet resolvers.
+    - Traffic dials and endpoint weights changes are effective within seconds.
+  - **Route53** 
+    - Weighted routing lets you associate multiple resources with a single domain name (example.com) or subdomain name (acme.example.com) and choose how much traffic is routed to each resource.
+    - This can be useful for a variety of purposes, including load balancing and testing new versions of the software
+    - While relying on the DNS service is a great option for blue/green deployments, **it may not fit use-cases that require a fast and controlled transition of the traffic**.
+    - Some client devices and internet resolvers **cache DNS answers** for long periods; this DNS feature improves the efficiency of the DNS service as it reduces the DNS traffic across the Internet, and serves as a resiliency technique by preventing authoritative name-server overloads. 
+    - The **downside** of this in blue/green deployments is that you don’t know how long it will take before all of your users receive updated IP addresses when you update a record, change your routing preference or when there is an application failure.
+  - **Elastic Load Balancing (ELB)**
+    - Can distribute traffic across healthy instances
+    - Can also use the Application Load Balancers weighted target groups feature for blue/green deployments as it does not rely on the DNS service.
+    - In addition you don’t need to create new ALBs for the green environment.
+    - **This option cannot be used for a multi-Region global solution**
+
+**CodeDeploy**
+  - CodeDeploy, a deployment is the process, and the components involved in the process, of installing content on one or more instances.
+  - This content can consist of code, web and configuration files, executables, packages, scripts, and so on.
+  - AWS CodeDeploy deploys content that is stored in a source repository, according to the configuration rules you specify. 
+  - Blue/Green deployment is one of the deployment types that CodeDeploy supports
+  - CodeDeploy is not meant to distribute traffic across instances

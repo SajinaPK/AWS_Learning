@@ -13,15 +13,15 @@
   ![Alt text](images/ACM.png)
 
 - **ACM - Requesting Public Certificates**
-    1. List domain names to be included in the certificates
+    - 1 - List domain names to be included in the certificates
         - FQDN: ex corp.example.com
         - Wildcard Domain: *example.com
-    2. Select Validation Method: DNS Validation or Email validation
+    - 2 - Select Validation Method: DNS Validation or Email validation
         - DNS validation is preferred for automation purposes
         - Email validation will send emails to contact addresses in the WHOIS database
         - DNS validation will leverage a CNAME record to DNS config to verify you own the domain (Route53 is integrated with ACM and this will be done for you)
-    3. It will take a few hours to get verified and the certificate will be issued.
-    4. The public certificate will be enrolled for automatic renewal
+    - 3 - It will take a few hours to get verified and the certificate will be issued.
+    - 4 - The public certificate will be enrolled for automatic renewal
         - ACM automatically renews ACM generated certicates 60 days before expiry.
 
 - **ACM - Importing Public Certicates**
@@ -57,3 +57,11 @@
     - **Regional**:
         - TLS certificate must be imported on API gateway in the same region as the API stage.
         - Then setup CNAME or better A-Alias record in Route 53 to point to your DNS.
+
+- **Renewal for 3rd party certificates**
+    - AWS Certificate Manager (ACM) does not attempt to renew third-party certificates that are imported.
+    - An administrator needs to reconfigure missing DNS records for certificates that use DNS validation if the record was removed for any reason after the certificate was issued.
+    - Amazon CloudWatch metrics and Amazon EventBridge events are enabled for all certificates that are managed by ACM.
+    - Users can monitor `days to expiry` as a metric for ACM certificates through **Amazon CloudWatch**.
+    - Amazon EventBridge expiry event is published for any certificate that is at least 45 days away from expiry by default
+    - Users can build alarms to monitor certificates based on days to expiry and also trigger custom actions such as calling a Lambda function or paging an administrator.

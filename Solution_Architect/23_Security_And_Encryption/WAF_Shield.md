@@ -37,6 +37,10 @@
     - 24X7 access to AWS DDoS response team (DRP)
     - Protect against higher fee during usage spikes due to DDoS
     - Shield Advanced automatic application layer DDoS mitigation automatically creates, evaluates and deploys AWS WAF rules to mitigate layer 7 attacks.
+    - Offer protection to resources outside of AWS
+    
+- If your organization has multiple AWS accounts, then you can subscribe multiple AWS Accounts to AWS Shield Advanced by individually enabling it on each account using the AWS Management Console or API.
+- You will pay the monthly fee once as long as the AWS accounts are all under a single consolidated billing, and you own all the AWS accounts and resources in those accounts.
 
 # AWS Firewall Manager
 

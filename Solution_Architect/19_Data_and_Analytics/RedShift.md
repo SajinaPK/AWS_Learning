@@ -40,9 +40,13 @@
 ![Alt text](images/RedShift_DataLoad.png)
 
 - **RedShift Spectrum**
-    - Query data that is already in S3 without loading it to RedShift.
+    - Query data that is already in S3 without loading it to RedShift tables.
+    - Efficiently query and retrieve structured and semistructured data from files in S3
     - Want to use lot more processing power.
     - To use RedShift Spectrum, you **must have a RedShift cluster available** to start the query.
     - The query is then submitted to thousands of RedShift Spectrum nodes which will perform the query onto your data in S3.
     
 ![Alt text](images/RedShift_Spectrum.png)
+(Amazon Redshift Spectrum resides on dedicated Amazon Redshift servers that are independent of your cluster)  
+(Redshift Spectrum pushes many compute-intensive tasks, such as predicate filtering and aggregation, down to the Redshift Spectrum layer)  
+(Thus, Amazon Redshift Spectrum queries use much less of your cluster's processing capacity than other queries.)

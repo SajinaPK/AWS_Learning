@@ -5,7 +5,7 @@
   - Supports:
     - Homogeneous migrations: ex Oracle to Oracle, Postgres to Postgres
     - Heterogeneous migrations: ex Microsoft SQL server to Aurora
-  - Continuous Data replication using CDC (Change Data Capture - identify and capture changes made to data in DB and delivering them real time)
+  - Continuous Data replication using CDC (**Change Data Capture** - identify and capture changes made to data in DB and delivering them real time)
   - You must create an EC2 instance to perform the replication tasks
   - So you have a Source DB (may be on prem) -> EC2 instance running DMS software will pull data from the DB -> continuously put in a target DB.
   - Source DB can be On-prem or EC2 based databases (Oracle, MS SQL server, MySQL, MariaDB, PostgreSQL, MongoDB, SAP, DB2), Azure SQL database, Amazon RDS (all including Aurora), S3, DocumentDB
@@ -45,7 +45,7 @@
     - Option 2: Create an Aurora read-replica from your RDS MySQL, and when replication lag is 0 (means Aurora replica has fully caught up with MySQL), promote it as its own DB cluster (can take time and cost $) (more continous) (extra cost associated with the network for replication)
   - External MySQL to Aurora MySQL
     - Option 1: Use Percona XtraBackup to create a file backup and put it in S3. From Aurora to directly import this backup file from S3 into a new Aurora MySQL DB cluster.
-    - Option 2: Create an Aurora MySQL DB then use the mysqldump utility to run against the MySQL database an pipe this output to the Aurora DB. (slower than S3 method)
+    - Option 2: Create an Aurora MySQL DB then use the mysqldump utility to run against the MySQL database and pipe this output to the Aurora DB. (slower than S3 method)
   - Use DMS if both database are up and running to do continuous replication between the 2 DB.
 
 # RDS & Aurora PostgreSQL Migrations
@@ -59,3 +59,13 @@
     - Create a backup and put it in S3.
     - Then, import it using the aws_s3 Aurora extension which will create a new DB out of it.
   - Use DMS if both database are up and running for continuous migration.
+
+# Notes
+
+  - **continuously replicate and consolidate Oracle and PostgreSQL RDS into Redshift**
+    - The Amazon Redshift cluster must be in the same AWS account and the same AWS Region as the replication instance.
+    - During a database migration to Amazon Redshift, AWS DMS first moves data to an Amazon S3 bucket
+    - When the files reside in an Amazon S3 bucket, AWS DMS then transfers them to the proper tables in the Amazon Redshift data warehouse.
+    - AWS DMS creates the S3 bucket in the same AWS Region as the Amazon Redshift database.
+    - he AWS DMS replication instance must be located in that same region.
+  - AWS DMS lets you expand the existing application to stream data from Amazon S3 into Amazon Kinesis Data Streams for real-time analytics without writing and maintaining new code

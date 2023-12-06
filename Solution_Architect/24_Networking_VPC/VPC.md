@@ -119,6 +119,7 @@
 
   - If the NAT instance through which the IP traffic is routed goes down then the target of the route becomes a **Blackhole** 
   - We can remove the NAT instances and replace them with NAT Gateway in the routes wherever applicable.
+  - **NAT gateway does not supports port forwarding**
 
 # VPC Peering
 
@@ -132,6 +133,12 @@
     ![Alt text](images/VPC_Peer.png)  
   (We dont have to specify source as CIDR on IP but instead we can refer a security group)
 
+# VPC Sharing
+
+  - VPC sharing (part of Resource Access Manager) allows multiple AWS accounts to create their application resources such as Amazon EC2 instances, Amazon RDS databases, Amazon Redshift clusters, and AWS Lambda functions, into **shared and centrally-managed Amazon Virtual Private Clouds (VPCs)**
+  - To set this up, the account that owns the VPC (owner) shares one or more subnets with other accounts (participants) that belong to the same organization from AWS Organizations
+  - After a subnet is shared, the participants can view, create, modify, and delete their application resources in the subnets shared with them
+  - Participants cannot view, modify, or delete resources that belong to other participants or the VPC owner.
 
 # VPC Endpoints (PrivateLink)
 
@@ -143,6 +150,8 @@
 
   - Every AWS service is publicly exposed (public URL)
   - VPC Endpoints (powered by AWS PrivateLink) allows you to connect to AWS services using a **private network** instead of using the public network.
+  - A VPC endpoint enables you to privately connect your VPC to supported AWS services and VPC endpoint services powered by AWS PrivateLink without requiring an internet gateway, NAT device, VPN connection, or AWS Direct Connect connection.
+  - When you use VPC endpoint, the traffic between your VPC and the other AWS service does not leave the Amazon network
   - The're redundant and scale horizaontally
   - They remove the need of IGW, NATGW, .. to access AWS services
   - In case of issues:

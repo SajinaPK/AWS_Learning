@@ -103,6 +103,8 @@ Questions to choose the right databsse based on your architecture
      - Build and run applications working with highly connected datasets - optimized for these complex and hard queries
      - Can store upto billions of relations and query the graph with milliseonds latency
      - Highly available with replications across multiple AZs
+     - Point-in-time recovery, continuous backup to Amazon S3
+     - Secure with support for HTTPS encrypted client connections and encryption at rest
      - Great for knowledge graphs (Wikipedia), fraud detection, recommendation engines, social networking.
 
 - **Keyspaces (for Apache Cassandra)**

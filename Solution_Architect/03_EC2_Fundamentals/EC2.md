@@ -23,12 +23,16 @@
     - It is possible to bootstrap our instances using an EC2 User data script.
     - **bootstrapping** means launching commands when a machine starts
     - That script is **only run once** at the instance **first start**
+    - By explicitly configuring the instance, user data can be executed every time an instance is re-started
     - EC2 user data is used to automate boot tasks such as:
         - Installing updates
         - Installing software
         - Downloading common files from the internet
         - Anything you can think of
+    - Can pass two types of user data - **shell scripts and cloud-init directives**
+    - Can also pass this data into the launch wizard as plain text or as a file.
     - The EC2 User Data Script runs with the **root user**
+    - You can't change the user data if the instance is running (even by using root user credentials), but you can view it.
 
 - **Notes**
     - In order to use SSH to access your EC2 instance, create a key pair and attach it to the instance when creating it
@@ -142,7 +146,7 @@
         - Purchasing Options:
             - **On-demand** – pay per second for active Dedicated Host
             - **Reserved** - 1 or 3 years (No Upfront, Partial Upfront,All Upfront)
-        - The most expensive option
+        - **The most expensive option**
         - Useful for software that have complicated licensing model (BYOL – Bring Your Own License)
         - Or for companies that have strong regulatory or compliance needs
 

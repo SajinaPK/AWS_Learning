@@ -23,6 +23,9 @@
 	    - AWS Certificate Manager (ACM), CloudWatch
 	    - Route53, AWS WAF, AWS Global Accelerator
 
+- You must ensure that your load balancer can communicate with registered targets **on both the listener port and the health check port**.
+- You must verify that the security groups associated with the load balancer allow traffic on both port in both directions. 
+
 - **Types of load balancer on AWS**
 
     - AWS has **4 kinds of managed Load Balancers**
@@ -121,6 +124,10 @@
     - IP Addresses – must be private IPs - must be hard coded - Can be a mix of private IPs of the EC2 and private IP of server in the Data centre
     - Application Load Balancer
     - **<u>Health Checks support the TCP, HTTP and HTTPS Protocols</u>**
+
+    - After the load balancer receives a connection request, it selects a target from the target group for the default rule
+    - If you specify targets using an **instance ID**, traffic is routed to instances using the **primary private IP address** specified in the primary network interface for the instance.
+    - The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
 ![Alt text](images/NLBTargets.png)  
 (The purpose of having an NLB in front of an ALB can be when you need fixed IP addresses which can be provided by the NLB and then ALB can have all the rules which can be created around handling HTTP traffic)  
 
@@ -248,6 +255,15 @@
 - Min Size / Max Size / Initial Capacity
 - Scaling Policies
 ![Alt text](images/LaunchTemplate.png)
+    - A launch template is an instance configuration template that an Auto Scaling group uses to launch Amazon EC2 instances. 
+    - It is not possible to modify a launch configuration once it is created.
+    - To modify the ASG to use different instance type or change other paramters, create a new launch configuration with changes.
+    - Then modify the Auto Scaling group to use this new launch configuration.
+    - Lastly to clean-up, just delete the old launch configuration as it is no longer needed.
+- Defining a launch template instead of a launch configuration allows you to have multiple versions of a template.
+- With launch templates, you can provision capacity across multiple instance types using both On-Demand Instances and Spot Instances to achieve the desired scale, performance, and cost
+- You cannot use a launch configuration to provision capacity across multiple instance types using both On-Demand Instances and Spot Instances.
+- 
 
 - **CloudWatch Alarms & Scaling**
 
@@ -275,7 +291,7 @@
 - **Good metrics to scale on**
     - **CPUUtilization**: Average CPU utilization across your instances
     - **RequestCountPerTarget**: to make sure the number of requests per EC2 instances is stable
-    - **Average Network In / Out** (if you’re application is network bound)
+    - **Average Network In / Out** (if your application is network bound)
     - **Any custom metric** (that you push using CloudWatch)
 
     ![Alt text](images/RequestCountPerTarget.png)

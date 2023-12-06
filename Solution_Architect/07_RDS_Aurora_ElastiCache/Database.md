@@ -150,6 +150,13 @@
 (The Master always writes to the shared volume which is shared across all the DB instances)  
 (There is auto scaling enabled for the replicas)  
 
+![Alt text](images/AuroraDBCluster2.png)
+- An Amazon Aurora DB cluster consists of one or more DB instances and a cluster volume that manages the data for those DB instances.
+- An Aurora cluster volume is a virtual database storage volume that spans multiple Availability Zones (AZs), with each Availability Zone (AZ) having a copy of the DB cluster data. Two types of DB instances make up an Aurora DB cluster:
+    - Primary DB instance – Supports read and write operations, and performs all of the data modifications to the cluster volume. Each Aurora DB cluster has one primary DB instance.
+    - Aurora Replica – Connects to the same storage volume as the primary DB instance and supports only read operations. Each Aurora DB cluster can have up to 15 Aurora Replicas in addition to the primary DB instance. Aurora automatically fails over to an Aurora Replica in case the primary DB instance becomes unavailable. You can specify the failover priority for Aurora Replicas. Aurora Replicas can also offload read workloads from the primary DB instance.
+
+
 - **Features of Aurora**
     - Automatic fail-over
     - Backup and Recovery
@@ -269,15 +276,18 @@
 
 # ElastiCache
 
-- The same way RDS is to get managed Relational Databases...
-- ElastiCache is to get managed Redis or Memcached
+- The same way RDS is to get managed Relational Databases...ElastiCache is to get managed Redis or Memcached
+- Allows you to seamlessly set up, run, and scale popular open-Source compatible in-memory data stores in the cloud.
 - Caches are in-memory databases with really high performance, low latency
+- Build data-intensive apps or boost the performance of your existing databases by retrieving data from high throughput and low latency in-memory data stores
+- Used as a caching layer in front of relational databases
 - Helps reduce load off of databases for read intensive workloads
 - Helps make your application stateless
 - AWS takes care of OS maintenance / patching, optimizations, setup, configuration, monitoring, failure recovery and backups
 - **<u>Using ElastiCache involves heavy application code changes</u>**
 - Common queries are cached so the DB will not be queried every time  
 - Change the application heavily to query the cache first
+- Popular choice for real-time use cases like Caching, Session Stores, Gaming, Geospatial Services, Real-Time Analytics, and Queuing
 
 - **Solution Architecture - DB Cache**
     - Applications queries ElastiCache, if not available, get from RDS and store in ElastiCache.

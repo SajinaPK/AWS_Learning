@@ -1,5 +1,9 @@
 # AWS Config
 
+- AWS Config provides AWS-managed rules, which are predefined, customizable rules that AWS Config uses to evaluate whether your AWS resources comply with common best practices.
+- When you turn on AWS Config, it first discovers the supported AWS resources that exist in your account and generates a configuration item for each resource.
+- AWS Config also generates configuration items when the configuration of a resource changes, and it maintains historical records of the configuration items of your resources from the time you start the configuration recorder.
+
   - Helps with auditing and recording **compliance** of your AWS resources based on some rules.
   - Helps record configurations and changes over time (to quickly be able to roll back and figure out what happened in your infra if need be)
   - Questions that can be solved by AWS Config:
@@ -10,6 +14,8 @@
   - AWS Config is a **per-region** service
   - Can be **aggregated across regions and accounts**.
   - Possibility of **storing the configuration data into S3** (analyzed by Athena)
+
+![Alt text](images/ConfigWorking.png)
 
 - **Config Rules**
     - Can use AWS managed config rules (over 75)
