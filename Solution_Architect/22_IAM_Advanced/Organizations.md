@@ -35,3 +35,9 @@
   (For a **Block List** we first attach an Allow star, and then we attach a deny like above deny access to DynamoDB)  
   (For **Allow List** we only allow, like in above example only allow EC2 and CloudWatch. Needs explicit allow to use resources)
   
+- **Migrate Accounts**
+
+  - To migrate accounts from one organization to another, you must have root or IAM access to both the member and master accounts. Here are the steps to follow: 
+    - 1 Remove the member account from the old organization 
+    - 2 Send an invite to the member account from the new Organization 
+    - 3 Accept the invite to the new organization from the member account

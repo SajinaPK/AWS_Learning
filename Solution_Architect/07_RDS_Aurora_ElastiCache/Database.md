@@ -156,6 +156,10 @@
     - Primary DB instance – Supports read and write operations, and performs all of the data modifications to the cluster volume. Each Aurora DB cluster has one primary DB instance.
     - Aurora Replica – Connects to the same storage volume as the primary DB instance and supports only read operations. Each Aurora DB cluster can have up to 15 Aurora Replicas in addition to the primary DB instance. Aurora automatically fails over to an Aurora Replica in case the primary DB instance becomes unavailable. You can specify the failover priority for Aurora Replicas. Aurora Replicas can also offload read workloads from the primary DB instance.
 
+- Each Read Replica is associated with a priority tier (0-15). 
+    - In the event of a failover, Amazon Aurora will promote the Read Replica that has the highest priority (the lowest numbered tier). 
+    - If two or more Aurora Replicas share the same priority, then Amazon RDS promotes the replica that is largest in size. 
+    - If two or more Aurora Replicas share the same priority and size, then Aurora promotes an arbitrary replica in the same promotion tier.
 
 - **Features of Aurora**
     - Automatic fail-over
@@ -260,6 +264,10 @@
         - When updates are made to the new DB cluster data, then additional storage is allocated and data is copied to be separated
     - Very fast & cost-effective
     - **Useful to create a “staging” database from a “production” database without impacting the production database**
+
+# Multi-AZ vs Read Replica for RDS
+
+![Alt text](images/MultiAZ_Replica.png)
 
 # Security
 

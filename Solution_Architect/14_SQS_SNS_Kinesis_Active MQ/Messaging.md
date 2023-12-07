@@ -100,6 +100,7 @@
   - FIFO = First In First Out (ordering of messages in the queue)
   ![Alt text](images/FIFO.png)
   - Limited throughput: 300 msg/s without batching, 3000 msg/s with batching
+  - When you batch 10 messages per operation (maximum), FIFO queues can support up to 3,000 messages per second.(4X300=1200 etc)
   - Exactly-once send capability (by removing duplicates)
   - Messages are processed in order by the consumer
   - Queue name must end with a .fifo .. for ex DemoQueue.fifo.
@@ -302,6 +303,7 @@
 |                                                                |                                                                                        |
 
 - Kinesis Firehose cannot be used to process and analyze the streaming data in custom applications (custom HTTP endpoint allowed)
+- Kinesis Data Streams **cannot directly write the output to Amazon S3**. Unlike Amazon Kinesis Data Firehose, KDS does not offer a ready-made integration via an intermediary AWS Lambda function to reliably dump data into Amazon S3. You will need to do a lot of custom coding to get the AWS Lambda function to process the incoming stream and then store the transformed output to Amazon S3 with the constraint that the buffer is maintained reliably and no transformed data is lost. 
 
 **Kinesis Vs SQS data ordering**
 
@@ -365,6 +367,8 @@ Which is **NOT** a supported **subscriber** for **AWS SNS**?
 Kinesis Data Firehose is now supported, but not **Kinesis Data Streams**.  
 
 **Amazon Kinesis Data Streams (KDS)** is a massively scalable and durable real-time data streaming service. It can continuously capture gigabytes of data per second from hundreds of sources such as website clickstreams, database event streams, financial transactions, social media feeds, IT logs, and location-tracking events.
+
+- When an Amazon Kinesis Data Stream is configured as the source of a Kinesis Firehose delivery stream, Firehose’s `PutRecord` and `PutRecordBatch` operations are disabled and Kinesis Agent cannot write to Kinesis Firehose Delivery Stream directly. Data needs to be added to the Amazon Kinesis Data Stream through the Kinesis Data Streams `PutRecord` and `PutRecords` operations instead.
 
 # Amazon MQ
 

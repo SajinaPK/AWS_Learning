@@ -19,7 +19,7 @@
 
 - **Snowball Edge (for data transfers)**
 
-    - Physical data transport solution:moveTBs or PBs of data in or out of AWS
+    - Physical data transport solution:move TBs or PBs of data in or out of AWS
     - Alternative to moving data over the network (and paying network fees)
     - Pay per data transfer job
     - Provide block storage and Amazon S3-compatible object storage
@@ -46,6 +46,7 @@
     - Its an actual truck
     - Each Snowmobile has 100 PB of capacity (use multiple in parallel)
     - High security: temperature controlled, GPS, 24/7 video surveillance
+    - For datasets less than 10 petabytes or distributed in multiple locations, you should use Snowball.
     - **Better than Snowball if you transfer more than 10 PB**
 
 - **AWS Snow Family for Data Migrations**

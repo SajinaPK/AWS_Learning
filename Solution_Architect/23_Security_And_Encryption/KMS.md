@@ -64,6 +64,15 @@
 
     ![Alt text](images/CustomPolicyExample.png)
 
+- **KMS Key Deletion**
+    - Deleting a KMS key is destructive and potentially dangerous so KMS enforces a waiting period. 
+    - To delete a KMS key you schedule key deletion. 
+    - You can set the waiting period from a minimum of 7 days up to a maximum of 30 days. 
+    - The default waiting period is 30 days. 
+    - During the waiting period, the KMS key status and key state is Pending deletion.
+    - To recover the KMS key, you can cancel key deletion before the waiting period ends.
+
+
 # KMS Multi-Region
 
   - Identical KMS key in different AWS Regions that can be used interchangeably

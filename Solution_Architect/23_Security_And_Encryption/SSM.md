@@ -57,6 +57,8 @@ Paramter type can be String, StringList, SecureString.
   - Secrets are encrypted using KMS
   - **Mostly meant for RDS integration**
 
+- Systems Manager Parameter Store can serve as a secrets store, but you must rotate the secrets yourself, it doesn't have an automatic capability for this
+
 - **AWS Secrets Manager - Multi-region Secrets**
     - Replicate Secrets across multiple AWS Regions
     - Secrets Manager keeps read replicas in sync with the primary Secret

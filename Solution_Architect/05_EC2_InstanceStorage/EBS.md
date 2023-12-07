@@ -66,6 +66,9 @@
 - EBS Volumes are characterized in Size | Throughput | IOPS (I/O Ops Per Sec)
 - When in doubt always consult the AWS documentation – it’s good!
 - Only gp2/gp3 and io1/io2 can be used as boot volumes
+- Solid state drive (SSD) backed volumes optimized for transactional workloads involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
+- Hard disk drive (HDD) backed volumes optimized for large streaming workloads where throughput (measured in MiB/s) is a better performance measure than IOPS.
+- Throughput Optimized HDD (st1) and Cold HDD (sc1) volume types CANNOT be used as a boot volume
 
 - **EBS Volume Types Use cases**
     - **1. General Purpose SSD**
@@ -166,8 +169,8 @@
             - Upto 3GiB/s for reads and 1GiB/s for writes
             - Used for unpredictable workloads 
     - **Performance Mode (set at EFS creation time)**
-        - General Purpose (default) – latency-sensitive use cases (web server, CMS, etc...) (If you chose the throughput mode as Elastic then this is the only option for Performance mode)
-        - Max I/O – higher latency, throughput, highly parallel (big data, media processing)
+        - **General Purpose (default)** – latency-sensitive use cases (web server, CMS, etc...) (If you chose the throughput mode as Elastic then this is the only option for Performance mode)
+        - **Max I/O**– higher latency, throughput, highly parallel (big data, media processing)
 
 - **EFS – Storage Classes**
 
@@ -211,6 +214,8 @@
 	- You add your own software, configuration, operating system, monitoring...
 	- Faster boot / configuration time because all your software is pre-packaged
 - AMI are built for a **specific region** (and can be copied across regions)
+- When AMI is copied from one Region to another, it automatically creates a snapshot in other Region because AMIs are based on the underlying snapshots.
+- An Amazon EC2 instance can be launched from either an instance store-backed AMI or an Amazon EBS-backed AMI.
 - You can launch EC2 instances from:
 	- **A Public AMI**: AWS provided
 	- **Your own AMI**: you make and maintain them yourself
@@ -228,11 +233,24 @@
 - EBS volumes are **network drives** with good but “limited” performance
 - **<u>If you need a high-performance hardware disk, use EC2 Instance Store</u>**
 - EC2 instance is a VM but obviously attached to a real hardware server, and some of these servers have disk space attached. Special type of EC2 instance can leverage Instance store, which is the hard drive attached to the physical server.
-- Better I/O performance and throughput
-- EC2 Instance Store lose their storage if they’re stopped (ephemeral) hence cannot be used as a durable long term place to store your data.(For long term storage use EBS)
-- Good for buffer / cache / scratch data / temporary content
+- **Better I/O performance and throughput**
+- EC2 Instance Store lose their storage if they’re stopped (**ephemeral**) hence cannot be used as a durable long term place to store your data.(For long term storage use EBS)
+- **Good for buffer / cache / scratch data / temporary content**
 - Risk of data loss if hardware fails
 - Backups and Replication are your responsibility
 - These are high performance hardware attached volume for your EC2 instance.
+- Instance store volumes are included as part of the instance's usage cost.
+- The virtual devices for instance store volumes are ephemeral[0-23]
+![Alt text](images/EC2InstanceStore1.png)
 
 ![Alt text](images/EC2InstanceStore.png)
+
+# Notes
+
+- A test file of size 1 gigabytes, is copied into S3 and EBS volume with gp2 with 100 GB of provisioned storage and also into EFS. What is the correct order of the storage charges incurred for the test file on these three storage types?
+    - Answer: Cost of test file storage on Amazon S3 Standard < Cost of test file storage on Amazon EFS < Cost of test file storage on Amazon EBS
+        - With Amazon EBS Elastic Volumes, you pay only for the resources that you use. The Amazon EFS Standard Storage pricing is $0.30 per GB per month. Therefore the cost for storing the test file on EFS is $0.30 for the month.
+
+        - For Amazon EBS General Purpose SSD (gp2) volumes, the charges are $0.10 per GB-month of provisioned storage. Therefore, for a provisioned storage of 100GB for this use-case, the monthly cost on EBS is $0.10*100 = $10. This cost is irrespective of how much storage is actually consumed by the test file.
+
+        - For S3 Standard storage, the pricing is $0.023 per GB per month. Therefore, the monthly storage cost on S3 for the test file is $0.023.

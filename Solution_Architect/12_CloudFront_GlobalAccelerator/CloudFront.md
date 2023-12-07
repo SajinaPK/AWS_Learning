@@ -6,6 +6,10 @@
 - 216 Point of Presence globally (edge locations)
 - **DDoS protection (because worldwide), integration with Shield, AWS Web Application Firewall**
 - CloudFront supports HTTP/RTMP protocol based requests
+- You can an use different origins for different types of content on a single site – e.g. **S3 for static objects, EC2 for dynamic content, and custom origins for third-party content**.
+- Keeps persistent connections with origin servers so objects are fetched from the origins as quickly as possible.
+
+![Alt text](images/CloudFront.png)
 
 - **Origins**
     - **S3 bucket**
@@ -19,10 +23,12 @@
         - S3 website (must first enable the bucket as a static S3 website)
         - Any HTTP backend you want
 
+
+
 - **CloudFront at a high level**
 ![Alt text](images/CloudFrontHL.png)  
 (We have an Origin and then edge location all around th world)  
-(When client sends a request to the edge location, the edge location will check its cache, if the cache doesnt have the content then it will fetch the resutlt from the origin and then cache the result locally for serving future requests)  
+(When client sends a request to the edge location, the edge location will check its cache, if the cache doesnt have the content then it will fetch the result from the origin and then cache the result locally for serving future requests)  
 
 - **S3 as an Origin**
 ![Alt text](images/CloudFrontS3.png)  
@@ -43,7 +49,7 @@
 
 - **ALB or EC2 as an origin**
 ![Alt text](images/ALBorEC2.png)  
-(CloudFront can access any HTTP backend which includes and EC2 instance or ALB)  
+(CloudFront can access any HTTP backend which includes EC2 instance or ALB)  
 (We have an HTTP backend here on an EC2 instance)  
 (For users to access this through CloudFront, the edge locations will make request to the EC2 instance hence they **must** be public)  
 (The EC2 instances must be public, otherwise edge locations will not be able to access it, because there is not private VPC connectivity in CloudFront)  
@@ -80,16 +86,31 @@
 - However, you can force an entire or partial cache refresh (thus bypassing the TTL) by performing a **CloudFront Invalidation**
 - You can invalidate all files ( * ) or a special path (/images/*)
 ![Alt text](images/CacheInvalidation.png)  
+
 (There are 2 edge locations each has its own cache which contains index.html and the images)  
 (If TTL for the files is set to 1 day, and you updated the files in the S3 bucket(origin), then if you want the changes to the files reflected immidiately then you can invalidate the paths /index.html and /image/*)  
 (Then CloudFront tells the edge locations to invalidate the said files and the files are going to be removed from the cache)  
 (Next time user request these files edge locations will not find it in the cache and hence re-fetch from the origin)  
+
+# Regional Caches
+
+- Regional edge caches are CloudFront locations that are deployed globally, close to your viewers
+- They’re located between your origin server and the POPs(global edge locations that serve content directly to viewers)
+- As objects become less popular, individual POPs might remove those objects to make room for more popular content
+- Regional edge caches have a larger cache than an individual POP, so objects remain in the cache longer at the nearest regional edge cache.
+- Viewer makes a request -> DNS routes the request to nearest POP -> If object not in cache, POP goes to nearest regional edge cache -> for objects not cached at either POP or regional edge cache location, forward the request to origin.
+- **Notes**
+    - Regional edge caches have feature parity with POPs. Ex,**cache invalidation request** removes an object from both POP & regional edge caches before it expires. Next time a viewer requests the object, CloudFront returns to the origin to fetch the latest version of the object.- Proxy HTTP methods (PUT, POST, PATCH, OPTIONS, and DELETE) go directly to the origin from the POPs and do not proxy through the regional edge caches.
+    - Dynamic requests, as determined at request time, do not flow through regional edge caches, but go directly to the origin.
+    - When the origin is an Amazon S3 bucket and the request’s optimal regional edge cache is in the same AWS Region as the S3 bucket, the POP skips the regional edge cache and goes directly to the S3 bucket.
 
 # AWS Global Accelerator
 
 - AWS Global Accelerator is a networking service that helps you improve the availability and performance of the applications that you offer to your global users
 - It provides **static IP addresses that provide a fixed entry point to your applications** and eliminate the complexity of managing specific IP addresses for different AWS Regions and Availability Zones (AZs)
 - Always routes user traffic to the optimal endpoint based on performance, reacting instantly to changes in application health, your user’s location, and policies that you configure.
+- If you have workloads that cater to a global client base, AWS recommends that you use AWS Global Accelerator.
+- If you have workloads hosted in a single AWS Region and used by clients in and around the same Region, you can use an Application Load Balancer or Network Load Balancer to manage your resources.
 
 - **Global users for our application**
     - You have deployed an application and have global users who want to access it directly.
@@ -136,8 +157,8 @@
     - Dynamic content(such as API acceleration and dynamic site delivery)
     - Content is served at the edge
 - **Global Accelerator**
-- Improves performance for a wide range of applications over TCP or UDP
-- Proxying packets at the edge to applications running in one or more AWS Regions.
-- Good fit for non-HTTP use cases,such as gaming(UDP), IoT(MQTT),or VoiceoverIP
-- Good for HTTP use cases that require static IP addresses
-- Good for HTTP use cases that required deterministic,fast regional failover
+    - Improves performance for a wide range of applications over TCP or UDP
+    - Proxying packets at the edge to applications running in one or more AWS Regions.
+    - Good fit for non-HTTP use cases,such as gaming(UDP), IoT(MQTT),or VoiceoverIP
+    - Good for HTTP use cases that require static IP addresses
+    - Good for HTTP use cases that required deterministic,fast regional failover

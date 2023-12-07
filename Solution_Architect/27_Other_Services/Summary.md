@@ -169,6 +169,30 @@
         - Ability to set CloudWatch alarms when reaching limits
         - **Programmatic Access using <u> AWS Support API </u>**
 
+# AWS Network Firewall
+
+  - Protect your entire Amazon VPC
+  - From Layer 3 to Layer 7 protection
+  - Any direction, you can inspect
+    - VPC to VPC traffic
+    - Outbound to internet
+    - Inbound from internet
+    - To / From Direct Connect & Site-to-Site 
+  - Internally, the AWS Network Firewall uses the AWS Gateway Load Balancer (instead of us setting up a third party appliance to inspect the traffic, we let AWS manage its own appliances)
+  - Rules can be centrally managed cross-account by AWS Firewall Manager to apply to many VPCs
+  - With the network firewall, we have fine grained controls over all kind of network traffic.
+
+- **Fine Grained Controls**
+  - Supports 1000s of rules
+    - IP & port - ex:10,000 of IPs filtering
+    - Protocol - ex:block the SMB protocol for outbound communications
+    - Filtering at Domain level: Stateful domain list rule groups: only allow outbound traffic from VPC to *.mycorp.com or third-party software repo
+    - General pattern matching using regex
+  - **Traffic Filtering**: Allow, drop, or alert for the traffic that matches the rules
+  - **Active flow inspection** to protect against network threats with intrusion-prevention capabilities (like Gateway Load Balancer, but all managed by AWS)
+  - Send logs of rule matches to Amazon S3, CloudWatch Logs, Kinesis Data Firehose
+  ![Alt text](images/NW_Firewall.png)
+
 # AWS Elastic Transcoder
 
 - Elastic Transcoder is used to convert media files stored in S3 into media file formats required by customer playback devices (phones etc..)

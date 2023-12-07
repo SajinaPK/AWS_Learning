@@ -87,12 +87,13 @@
         - recommended for files > 100MB, must use for files > 5GB
         - Can help parallelize uploads (speed up transfers)
     ![Alt text](images/S3MultiPart.png)
-    - **S3 Transfer Acceleration**
-        - Increase transfer speed by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region
+    - **S3 Transfer Acceleration (S3TA)**
+        - Increase transfer speed by 50-500% by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region
         - Takes advantage of Amazon CloudFront’s globally distributed edge locations
         - Compatible with multi-part upload
+        - With S3TA, you pay only for transfers that are accelerated.
     ![Alt text](images/S3TransferAccelerate.png)
-        - bucket-level feature that enables fast, easy, and secure transfers of files over long distances between  client and S3 bucket.
+        - Bucket-level feature that enables fast, easy, and secure transfers of files over long distances between  client and S3 bucket.
         - You cannot use Transfer Acceleration to copy objects across S3 buckets in different Regions using S3 console.
     - **aws S3 sync command**
         - The aws S3 sync command uses the CopyObject APIs to copy objects between Amazon S3 buckets.
@@ -132,3 +133,12 @@
 ![Alt text](images/S3Batch.png)
 - Get the object list with S3 inventory and then use S3 select to filter the list for ex find un-encrypted objects in the bucket.
 - Do batch operation by passing this list to S3 Batch with parameters for ex to encrypt all the files at once.
+
+# Data Transfer 
+
+Following transfer over public internet is free:
+- Data transferred out to the internet for the first 100GB per month, aggregated across all AWS Services and Regions (except China and GovCloud)
+- **Data transferred in from the internet**
+- Data transferred between S3 buckets in the **same AWS Region**. 
+- Data transferred from an Amazon S3 bucket to any AWS service(s) within the same AWS Region as the S3 bucket (including to a different account in the same AWS Region).
+- **Data transferred out to Amazon CloudFront (CloudFront)**

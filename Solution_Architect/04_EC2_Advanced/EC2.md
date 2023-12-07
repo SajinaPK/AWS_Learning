@@ -29,9 +29,9 @@
 - Use placement groups to influence the placement of a group of interdependent instances to meet the needs of your workload
 - If there are insufficient unique hardware to fulfill the request then the request fails and can be retried later.
 - When you create a placement group, you specify one of the following strategies for the group:
-    - **Cluster** — clusters instances into a low-latency group in a single Availability Zone (high performance, high risk)
+    - **Cluster** — clusters instances into a low-latency group in a single Availability Zone (high performance, high risk) (Can span multiple AZ in the same Region)
     - **Spread** — spreads instances across underlying hardware (max 7 instances per group per AZ)
-    - **Partition** — spreads instances across many different partitions (which rely on different sets of racks) within an AZ. Scales to 100s of EC2 instances per group (Hadoop, Cassandra, Kafka) (They are spread but still not isolated from failure but partitions are isolated)
+    - **Partition** — spreads instances across many different partitions (which rely on different sets of racks) within an AZ. Scales to 100s of EC2 instances per group (Hadoop, Cassandra, Kafka) (They are spread but still not isolated from failure but partitions are isolated) (Can have partitions in multiple AZ in the same region)
 
 - **Placement Groups - Cluster**
 
@@ -88,6 +88,7 @@
 - We know we can stop, terminate instances
 	- **Stop** – the data on disk (EBS) is kept intact in the next start
 	- **Terminate** – any EBS volumes (root) also set-up to be destroyed is lost. If you set your root volume to be destroyed with your instance it will be destroyed, but any volume not set to be destroyed when your instance terminates will be kept.
+    
 - On start, the following happens:
 	- First start: the OS boots & the EC2 User Data script is run
 	- Following starts: the OS boots up
@@ -96,12 +97,15 @@
 	- The in-memory (RAM) state is preserved
 	- The instance boot is much faster! (the OS is not stopped / restarted)
 	- Under the hood: the RAM state is written to a file in the root EBS volume
+    - The processes that were previously running on the instance are resumed
 	- The root EBS volume must be encrypted
     - The EBS volume should have enough space to contain the RAM
 	- **Use cases**:
 		- Long-running processing
 		- Saving the RAM state
 		- Services that take time to initialize
+        - Speeding up the application start time
+    ![Alt text](images/Hibernate1.png)
 
 ![Alt text](images/Hibernate.png)  
 (When hibernation starts, the instance will go into stopping state and RAM will be dumped into the EBS volume)  

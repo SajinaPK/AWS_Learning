@@ -57,6 +57,7 @@
   - Can set up **EventBridge Rules** to be notified in case of findings
   - EventBridge rules can target AWS Lambda or SNS
   - **Can protect against CryptoCurrency attacks (has a dedicated "finding" for it)**
+  - If you disable GuardDuty, your existing findings and configuration are lost and can't be recovered. If you want to save your existing findings, you must export them before you stop GuardDuty
   ![Alt text](images/GuardDuty.png)
 
 # Inspector
@@ -79,7 +80,7 @@
 
   - **What does Inspector Evaluate?**
     - **Remember its only for EC2 instances, Container images and Lambda functions**
-    - Continuous scanning of the Infrastructure, onl;y when needed
+    - Continuous scanning of the Infrastructure, only when needed
     - Going to look into a database of CVEs or for package vulnerabilities (EC2, ECR & Lambda)
     - Going to look at network reachability on EC2
     - If for ex the database of CVE is updated then Inspector will automatically run again and test the infra again.

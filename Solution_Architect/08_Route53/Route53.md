@@ -272,9 +272,9 @@
     - The Domain Registrar usually provides you with a DNS service to manage your DNS records
     - But you can use another DNS service to manage your DNS records
     - Example: purchase the domain from GoDaddy and use Route 53 to manage your DNS records
-    ![Alt text](<Screenshot 2023-12-01 at 4.07.40 PM.png>)
+    ![Alt text](images/DomainRegistar1.png)
 
-    ![Alt text](<Screenshot 2023-12-01 at 4.08.30 PM.png>)  
+    ![Alt text](images/DomainRegistar2.png)  
     (When you go to GoDaddy you are going to register your domain and then you get the name servers option and you can specify custom name servers)  
     (In Route 53, we create a public hosted zone for any domain we want, and then in the hosted zone details, we can see the 4 name servers)  
     (These 4 name servers we are going to have to change in the GoDaddy website)  

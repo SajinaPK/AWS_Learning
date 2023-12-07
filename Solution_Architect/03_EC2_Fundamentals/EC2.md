@@ -209,6 +209,8 @@
         - <u>Spot Fleets allow us to automatically request Spot Instances with the lowest price</u>
         -  A very simple spot instance request where you know exactly the type of instance you want and the AZ you want Vs using a spot fleet and saying, "you can choose all these instance types and all these AZ, and what I need is to get the lowest price, for ex"
 
+- Spot instances can be taken back by AWS with two minutes of notice, so spot instances cannot be reliably used for running application which needs to run for up to 8 hours. Spot blocks can only be used for a span of up to 6 hours.
+
 # Security Groups
 
 - Security Groups are the fundamental of network security in AWS

@@ -103,6 +103,7 @@
     - **<u>Important step:</u>** enable **Route Propegation** for the Virtual Private Gateway in the route table that is associated with your subnets. 
     - If you need to ping your EC2 instances from on-premises, make sure you add the ICMP protocol on the inbound of your security groups.  
     ![Alt text](images/SiteToSiteVPN.png)
+    - Site-to-site VPN cannot provide low latency and high throughput connection
 
   - **AWS VPN CloudHub**
     - If you have multiple customer networks, multiple data centre, each their own customer gateway, CloudHub provides the secure communication between all the sites, using multiple VPN connections.
@@ -277,30 +278,9 @@
   (In this case data flows directly from theprivate subnet into the VPC endpoint and the S3 bucket)  
   (No cost for using Gateway endpoint and pay $0.01 per GB of Data transfer in/out of S3 for the same region)  
 
-# AWS Network Firewall
+# Notes
 
-  - Protect your entire Amazon VPC
-  - From Layer 3 to Layer 7 protection
-  - Any direction, you can inspect
-    - VPC to VPC traffic
-    - Outbound to internet
-    - Inbound from internet
-    - To / From Direct Connect & Site-to-Site 
-  - Internally, the AWS Network Firewall uses the AWS Gateway Load Balancer (instead of us setting up a third party appliance to inspect the traffic, we let AWS manage its own appliances)
-  - Rules can be centrally managed cross-account by AWS Firewall Manager to apply to many VPCs
-  - With the network firewall, we have fine grained controls over all kind of network traffic.
+- **VPN Connections** can be configured in minutes and are a good solution if you have an immediate need, have low to modest bandwidth requirements, and can tolerate the inherent variability in Internet-based connectivity.
 
-- **Fine Grained Controls**
-  - Supports 1000s of rules
-    - IP & port - ex:10,000 of IPs filtering
-    - Protocol - ex:block the SMB protocol for outbound communications
-    - Filtering at Domain level: Stateful domain list rule groups: only allow outbound traffic from VPC to *.mycorp.com or third-party software repo
-    - General pattern matching using regex
-  - **Traffic Filtering**: Allow, drop, or alert for the traffic that matches the rules
-  - **Active flow inspection** to protect against network threats with intrusion-prevention capabilities (like Gateway Load Balancer, but all managed by AWS)
-  - Send logs of rule matches to Amazon S3, CloudWatch Logs, Kinesis Data Firehose
-  ![Alt text](images/NW_Firewall.png)
-
-
-Note: A web application hosted on a fleet of EC2 instances managed by an Auto Scaling Group. You are exposing this application through an Application Load Balancer. Both the EC2 instances and the ALB are deployed on a VPC with the following CIDR 192.168.0.0/18. How do you configure the EC2 instances' security group to ensure only the ALB can access them on port 80?
-- Add an Inbound Rule with port 80 and ALBs Security Group as the source.
+- A web application hosted on a fleet of EC2 instances managed by an Auto Scaling Group. You are exposing this application through an Application Load Balancer. Both the EC2 instances and the ALB are deployed on a VPC with the following CIDR 192.168.0.0/18. How do you configure the EC2 instances' security group to ensure only the ALB can access them on port 80?
+  - Add an Inbound Rule with port 80 and ALBs Security Group as the source.
