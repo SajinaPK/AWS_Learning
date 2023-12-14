@@ -85,6 +85,20 @@ AWS owns and maintains the network connected hardware required for these applica
 - MariaDB: 3306 (same as MySQL)
 - Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
 
+**Policy types**
+  - 1 - **Identity-based policies** – Attach managed and inline policies to IAM identities (users, groups to which users belong, or roles). Identity-based policies grant permissions to an identity.
+
+  - 2 - **Resource-based policies** – Attach inline policies to resources. The most common examples of resource-based policies are S3 bucket policies and IAM role trust policies. Grants permissions to the principal that is specified in the policy. Principals can be in the same account as the resource or in other accounts. The IAM service supports only one type of resource-based policy called a **role trust policy**, which is attached to an IAM role.
+
+  - 3 - **Permissions boundaries** – Use a managed policy as the permissions boundary for an IAM entity (user or role). It does not grant permissions. Permissions boundaries do not define the maximum permissions that a resource-based policy can grant to an entity.
+
+  - 4 - **Organizations SCPs** – Use an AWS Organizations service control policy (SCP) to define the maximum permissions for account members of an organization or organizational unit (OU). SCPs limit permissions that identity-based policies or resource-based policies grant to entities (users or roles) within the account, but do not grant permissions.
+
+  - 5 - **Access control lists (ACLs)** – Use ACLs to control which principals in other accounts can access the resource to which the ACL is attached. ACLs are similar to resource-based policies, and only policy that does not use the JSON structure. ACLs are cross-account permissions policies that grant permissions to the specified principal. ACLs cannot grant permissions to entities within the same account.
+
+  - 6 - **Session policies** – Pass advanced session policies when you use the AWS CLI or AWS API to assume a role or a federated user. Session policies limit the permissions that the role or user's identity-based policies grant to the session. Session policies limit permissions for a created session, but do not grant permissions.
+
+
 **AWS services that can be used for buffering or throttling to handle sudden traffic spikes**  
 - **Throttling** is the process of limiting the number of requests an authorized program can submit to a given operation in a given amount of time.
 - **Amazon API Gateway**
@@ -128,3 +142,7 @@ AWS owns and maintains the network connected hardware required for these applica
   - AWS CodeDeploy deploys content that is stored in a source repository, according to the configuration rules you specify. 
   - Blue/Green deployment is one of the deployment types that CodeDeploy supports
   - CodeDeploy is not meant to distribute traffic across instances
+
+**AWS Resource Access Manager (AWS RAM)**
+
+- is a service that enables you to easily and securely share AWS resources with any AWS account or within your AWS Organization.

@@ -60,11 +60,11 @@
 
     ![Alt text](images/QuickSight_Integrations.png)
 
-
 # Glue
 - Manged **extract, transform and load (ETL)** service
 - Useful to prepare and transform data for analytics
 - Fully serverless service
+- Extract data, transform it, and load the resulting data back to S3, data stores in a VPC, or on-premises JDBC data stores as a target
 - The **AWS Glue Data Catalog** contains references to data that is used as sources and targets of your ETL jobs in AWS Glue. To create your data warehouse or data lake, you must **catalog this data**. The Glue Data Catalog is an index to the location, schema, and runtime metrics of your data. Information in the Data Catalog is stored as **metadata tables**, where each table specifies a single data store. Typically, you run a **crawler** to take inventory of the data in your data stores, but there are other ways to add metadata tables into your Data Catalog.
 - **Glue Job Bookmarks**: prevent reprocessing old data in case you run a new ETL job.
 - **Glue Elastic Views**: combine and replicate data across multiple data stores using SQL. So to create a view RDS and Aurora and S3.

@@ -16,10 +16,10 @@
     ![Alt text](images/RPO_RTO.png)
 
 - **Disaster Recovery Strategies**
-    - Backup and Restore
-    - Pilot Light
-    - Warm Standy
-    - Hot Site / Multi-site approach
+    - Backup and Restore (RPO in hours, RTO 24 hours or less)
+    - Pilot Light (RPO in minutes, RTO in hour)
+    - Warm Standy (RPO in seconds, RTO in minutes)
+    - Hot Site / Multi-site approach (RPO and RTO near zero)
 
     ![Alt text](images/Strategies.png)  
     (faster RTO costs more money)  
@@ -30,7 +30,7 @@
     (For S3 data backup, we can use AWS storage gateway and have some lifecycle policy put data into Glacier for cost optimization or once a week send a ton of data into Glacier using AWS Snowball)  
     (Here if you use Snowball your RPO is going to be 1 week, because you send a snowball device once a week. So 1 week data loss in case of disaster)  
     (Instead if you are using AWS Cloud, EBS, RedShift and RDS, and you schedule regular snapshots and back them up then RPO can be 24 hours or 1 hour based on how frequent you create the snapshot)  
-    (Here if s disaster strikes and you need to restore all your data, then you can use AMIs to recreate the EC2 instances, spin up application or restore straight from a snapshot and recreate RDS or EBS or RedShift.)  
+    (Here if a disaster strikes and you need to restore all your data, then you can use AMIs to recreate the EC2 instances, spin up application or restore straight from a snapshot and recreate RDS or EBS or RedShift.)  
     (The restore in this case can take a while, and so RTO may be high)  
     (Benefit is that that its very cheap and we dont manage the infrastrucure, we just recreate it when the disaster strikes, and the cost hence is only for storing the backups)  
 

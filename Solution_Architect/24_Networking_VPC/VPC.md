@@ -100,18 +100,29 @@
 
     - AWS managed NAT, higher bandwidth, high availability, no administration
     - Pay per hour for usage and bandwidth
-    - NATGW is created in a specific Availability Zone, uses an Elastic IP.
+    - NATGW is created in a specific Availability Zone, uses an **Elastic IP**.
     - Cant be used by EC2 instance in the same subnet (only from other subnets)
     - Requires an IGW (Private Subnet -> NATGW -> IGW)
     - 5 Gbps of bandwidth with automatic scaling upto 100 Gbps
+    - Supports the following protocols: TCP, UDP, and ICMP.
     - No Security Groups to manage / required.
+    - NAT gateways need to be set up in public subnets
+    - Can support up to 55,000 simultaneous connections to each unique destination.
+    -You can use a network access control list (network ACL) to control the traffic to and from the subnet in which the NAT gateway is located.
     ![Alt text](images/NATGW.png)  
 
     - **NAT Gateway is resilient within a single Availability Zone**
     - Must create **multiple NAT Gateways** in **Multiple AZs** for fault tolerance.
     - There is no cross-AZ failover needed because if an AZ goes down it doesnt need NAT.
     ![Alt text](images/NAT_HA.png)  
-    (If the AZ goes down in AZ-A then NAT goes down but since all EC2 instance in that AZ is down too, we dont need this NAT)  
+    (If the AZ goes down in AZ-A then NAT goes down but since all EC2 instance in that AZ is down too, we dont need this NAT) 
+
+  - **To create a NAT gateway**
+    - You must specify the public subnet in which the NAT gateway should reside
+    - You must also specify an Elastic IP address to associate with the NAT gateway
+    - The Elastic IP address cannot be changed after you associate it
+    - You must update the route table associated with one or more of your private subnets to point internet-bound traffic to the NAT gateway
+    - This enables instances in your private subnets to communicate with the internet
 
 - **NAT Instance Vs NAT Gateway**
 

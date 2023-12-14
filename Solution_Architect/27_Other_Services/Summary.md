@@ -1,12 +1,19 @@
 # CloudFormation
 
-- ClodFormation is a declarative way of outlining your AWS Infrastructure, for any resources (most of them are supported)
+- CloudFormation is a declarative way of outlining your AWS Infrastructure, for any resources (most of them are supported)
 - For ex: within a CloudFormation template, you say:
     - I want a security group
     - I want 2 EC2 instances using this security group
     - I want an S3 bucket
     - I want a load balancer (ELB) in front of these machines
 - Then CloudFormation creates those for you, in the **right order**, with the **exact configuration** that you specify.
+
+- **Template**: Cloudformation template is a JSON or YAML-format, text-based file that describes all the AWS resources you need to deploy to run your application. 
+    - It acts as a blueprint for a stack
+- **Stack**: is a set of AWS resources that are created and managed as a single unit when CloudFormation instantiates a template
+- **StackSet**: extends the functionality of stacks by enabling you to create, update, or delete stacks across multiple accounts and regions with a single operation. A **stack instance** refers to a stack in a target account within an AWS Region and is associated with only one stack set.
+![Alt text](images/StackSet.png)
+- **Change Set**: If you need to make changes to the running resources in a stack, you update the stack. Before making changes to your resources, you can generate a change set, which is a summary of your proposed changes. Change sets allow you to see how your changes might impact your running resources, especially for critical resources, before implementing them.
 
 - **Benefits of CloudFormation**
     - **Infrastructure as code**

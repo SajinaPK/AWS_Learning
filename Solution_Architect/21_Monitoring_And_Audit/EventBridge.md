@@ -3,6 +3,7 @@
   - Schedule: Cron jobs (scheduled scripts) ex every hour trigger a Lambda function.
   - Event Pattern: Event rules to react to a service doing something. ex react to an event of IAM root user sign in in the console and send a message to SNS topic and receive an email notification. So like if someone is using root accout you will get an email.
   - Trigger Lambda functions, send SQS/SNS messages
+  - Is the only event-based service that integrates directly with **third-party SaaS partners**
 
     ![Alt text](images/EventBridge_Rules.png)
     (Filter can be applied on the source data for ex event only for a specific bucket)

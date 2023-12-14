@@ -9,7 +9,7 @@
   (On top of this, to the same user we attach allow:iamCreateUser, Resource *)  
   (In this case no permissions will be given to the user as the IAM policy is outside the boundary)  
 
-  - If an example developer is given AdministratorAccess, then this user becomes super user and can do everything. But if we set a permission boundary of AmazonS3FullAccess, then the developer can only access S3 because thats the boundary. The boundary is going to be more restrictive.
+  - If an example developer is given `AdministratorAccess`, then this user becomes super user and can do everything. But if we set a permission boundary of AmazonS3FullAccess, then the developer can only access S3 because thats the boundary. The boundary is going to be more restrictive.
 
   ![Alt text](images/EffectivePermission.png)  
   (Effective permissions is in the middle of all 3. Org SCP applies to all IAM entity in the account, bondaries are only for users and roles, identity based policy is attached to user or group)  
@@ -30,3 +30,11 @@
     Ans: No. There is a Deny on top and Allow in the bottom. Even though they conflict, an explicity deny takes precedence.
     - Q3: Can you perform ec2:DescribeInstances?  
     Ans: No. There is no explicit allow.  
+
+- Some of the AWS tasks that only a root account user can do are as follows: (Cannot be done with `AdministratorAccess`)
+  - Change account name or root password or root email address
+  - Change AWS support plan
+  - Close AWS account
+  - Enable AWS Multi-Factor Authentication (AWS MFA) on S3
+  - Create Cloudfront key pair
+  - Register for GovCloud

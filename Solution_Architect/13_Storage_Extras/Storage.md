@@ -235,10 +235,10 @@
     (So with cache low latency access to important files on the data centre)  
 
     - **Volume Gateway**
-        - Block storage using iSCSI protocol backed by S3
+        - Block storage using iSCSI(Internet Small Computer System Interface) protocol backed by S3
         - Backed by EBS snapshots(point in time backups) which can help restore on-premises volumes!
-        - **Cached volumes**: low latency access to most recent data
-        - **Stored volumes**: entire dataset is on premise, scheduled backups to S3
+        - **Cached volumes**: low latency access to most recent data. Store data in S3 and retain a copy of frequently accessed data subsets locally. Offer a substantial cost savings on primary storage and minimize the need to scale your storage on-premises. You also retain low-latency access to your frequently accessed data.
+        - **Stored volumes**: entire dataset is on premise, scheduled backups to S3 (asynchronously back up point-in-time snapshots of data). 
     ![Alt text](images/VolumeGateway.png)  
     (Application server needs to be backed up and the Volume GW creates EBS snapshots backed by S3)  
     (Volume GW backs up volumes of your on-prem servers)  

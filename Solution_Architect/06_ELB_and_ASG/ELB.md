@@ -68,6 +68,7 @@
 - Load balancing to multiple applications on the same machine (ex: containers)
 - Support for HTTP/2 and WebSocket
 - Support redirects (from HTTP to HTTPS for example)
+- **Cannot be assigned an Elastic IP address (static IP address).**
 - Routing tables to different target groups:
     - Routing based on path in URL (example.com/**users** & example.com/**posts**)
     - Routing based on hostname in URL (**one.example.com** & **other.example.com**)
@@ -99,6 +100,7 @@
 - **Good to Know**
 
     - Fixed hostname (XXX.region.elb.amazonaws.com)
+    - Application and Classic Load Balancers expose a fixed DNS (=URL) rather than the IP address. 
     - The application servers don’t see the IP of the client directly
         - The true IP of the client is inserted in the header X-Forwarded-For
         - We can also get Port (X-Forwarded-Port) and proto (X-Forwarded-Proto)
@@ -132,6 +134,11 @@
 - The load balancer rewrites the destination IP address from the data packet before forwarding it to the target instance.
 ![Alt text](images/NLBTargets.png)  
 (The purpose of having an NLB in front of an ALB can be when you need fixed IP addresses which can be provided by the NLB and then ALB can have all the rules which can be created around handling HTTP traffic)  
+
+# WhiteListing IPs
+- Classic and Application Load Balancers use the private IP addresses associated with their ENI as the source IP address for requests forwarded to your web servers 
+    - Use security group referencing on the web servers for whitelisting load balancer traffic from ALB and CLB
+- NLB don't support security groups, based on the target group configurations, the IP addresses of the clients or the private IP addresses associated with the NLB must be allowed on the web server's security group.
 
 # Gateway Load Balancer
 
@@ -201,6 +208,7 @@
 - The load balancer uses an X.509 certificate (SSL/TLS server certificate)
 - You can manage certificates using ACM (AWS Certificate Manager)
 - You can create upload your own certificates alternatively
+- You should note that the ALB and NLB supports TLS offloading. The CLB supports SSL offloading.
 - HTTPS listener:
     - You must specify a default certificate
     - You can add an optional list of certs to support multiple domains

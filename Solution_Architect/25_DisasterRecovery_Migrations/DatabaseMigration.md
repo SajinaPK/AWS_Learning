@@ -67,5 +67,5 @@
     - During a database migration to Amazon Redshift, AWS DMS first moves data to an Amazon S3 bucket
     - When the files reside in an Amazon S3 bucket, AWS DMS then transfers them to the proper tables in the Amazon Redshift data warehouse.
     - AWS DMS creates the S3 bucket in the same AWS Region as the Amazon Redshift database.
-    - he AWS DMS replication instance must be located in that same region.
+    - The AWS DMS replication instance must be located in that same region.
   - AWS DMS lets you expand the existing application to stream data from Amazon S3 into Amazon Kinesis Data Streams for real-time analytics without writing and maintaining new code

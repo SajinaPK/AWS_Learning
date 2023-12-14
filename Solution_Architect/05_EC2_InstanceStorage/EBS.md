@@ -25,7 +25,7 @@
 
 - **EBS – Delete on Termination attribute**
 	- Controls the EBS behaviour when an EC2 instance terminates
-	- By default, the root EBS volume is deleted (attribute enabled)
+	- By default, the root EBS volume is deleted (attribute enabled) (`DeleteOnTermination` attribute)
 	- By default, any other attached EBS volume is not deleted (attribute disabled)
 	- This can be controlled by the AWS console / AWS CLI
 	- **Use case: preserve root volume when instance is terminated**
@@ -235,6 +235,7 @@
 - EC2 instance is a VM but obviously attached to a real hardware server, and some of these servers have disk space attached. Special type of EC2 instance can leverage Instance store, which is the hard drive attached to the physical server.
 - **Better I/O performance and throughput**
 - EC2 Instance Store lose their storage if they’re stopped (**ephemeral**) hence cannot be used as a durable long term place to store your data.(For long term storage use EBS)
+- Some instance types use NVMe or SATA-based solid-state drives (SSD) to deliver high random I/O performance. 
 - **Good for buffer / cache / scratch data / temporary content**
 - Risk of data loss if hardware fails
 - Backups and Replication are your responsibility

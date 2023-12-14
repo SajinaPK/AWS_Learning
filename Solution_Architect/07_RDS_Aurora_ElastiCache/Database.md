@@ -333,7 +333,15 @@
     - **Session Store**: store temporary session data in a cache (using TTL features)
 
 - **ElastiCache – Redis Use Case**
+    - Real-time transactional and analytical processing use cases uch as caching, chat/messaging, gaming leaderboards, geospatial, machine learning, media streaming, queues, real-time analytics, and session store.
     - Gaming Leaderboards are computationally complex
     - **Redis Sorted sets** guarantee both uniqueness and element ordering
     - Each time a new element added, it’s ranked in real time, then added in correct order
     ![Alt text](images/RedisSortedSet.png)
+
+- **ElastiCache – Memcached Use Case**
+    - Compatible in-memory key-value store service that can be used as a cache or a data store
+
+# Read replicas, Multi-AZ deployments, and multi-region deployments
+
+![Alt text](images/DifferenceChart.png)

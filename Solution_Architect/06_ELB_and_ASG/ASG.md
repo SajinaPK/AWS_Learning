@@ -91,15 +91,22 @@
     - Does not perform health checks on instances that are in a standby state.
 
 - **Default termination policy**
-    - First determines which AZ have the most instances, and it finds at least one instance that is not protected from scale in.
-        - Terminates instances that use a launch configuration
-        - Terminates instances that use a launch template
-        - Terminates instances closest to the next billing hour.
+    - 1 -Determine which Azs have the most instances and at least one instance that is not protected from scale-in. 
+    - 2 -Determine which instances to terminate to align the remaining instances to the allocation strategy for the On-Demand or Spot Instance
+    - 3 -Determine whether any of the instances use the oldest launch template or configuration:
+        - 3a. Determine whether any of the instances use the oldest launch template unless there are instances that use a launch configuration. 
+        - 3b. Determine whether any of the instances use the oldest launch configuration. 
+    - 4 -After applying all of the above criteria, if there are multiple unprotected instances to terminate, determine which instances are closest to the next billing hour.
+
+- **Auto Scaling group lifecycle hook**
+    - Lifecycle hooks enable you to perform custom actions as the Auto Scaling group launches or terminates instances. 
+    - For example, you could install or configure software on newly launched instances, or download log files from an instance before it terminates.
 
 - **Why didn’t Amazon EC2 Auto Scaling terminate an unhealthy instance?**
     - Health check grace period
     - Suspended processes such as HealthCheck, ReplaceUnhealthy, or Terminate affects this.
-    - Instance state in the EC2 console -  does not immediately terminate instances with an Impaired status
+    - Instance state in the EC2 console 
+        -  does not immediately terminate instances with an Impaired status
         - Delay or not terminate instances that fail to report data for status checks. This usually happens when there is insufficient data for the status check metrics in Amazon CloudWatch.
     - Instance state in Auto Scaling groups - does not perform health checks on instances in the Standby state.
         - Terminate an instance if it is waiting for a lifecycle hook to complete

@@ -68,7 +68,7 @@
     (Private hosted zone is queried from within your private resources for ex VPC)  
     (In the VPC the instances are sending request for resources within the same VPC)  
 
-- **Route 53 – RecordsTTL (TimeTo Live)**
+- **Route 53 – Records TTL (TimeTo Live)**
     - **High TTL – e.g., 24 hr**
         - Less traffic on Route 53
         - Possibly outdated records
@@ -116,22 +116,22 @@
     - **You cannot set an ALIAS record for an EC2 DNS name**
     ![Alt text](images/AliasRecordTarget.png)
 
-- **Route 53 – Routing Policies**
+# Route 53 – Routing Policies
 
-    - Define how Route 53 responds to DNS queries
-    - Don’t get confused by the word “Routing”
-        - It’s not the same as Load balancer routing which routes the traffic
-        - DNS does not route any traffic, it only responds to the DNS queries
-    - Route 53 Supports the following Routing Policies
-        - Simple
-        - Weighted
-        - Failover
-        - Latency based
-        - Geolocation
-        - Multi-Value Answer
-        - Geoproximity (using Route 53 Traffic Flow feature)
+- Define how Route 53 responds to DNS queries
+- Don’t get confused by the word “Routing”
+    - It’s not the same as Load balancer routing which routes the traffic
+    - DNS does not route any traffic, it only responds to the DNS queries
+- Route 53 Supports the following Routing Policies
+    - Simple
+    - Weighted
+    - Failover
+    - Latency based
+    - Geolocation
+    - Multi-Value Answer
+    - Geoproximity (using Route 53 Traffic Flow feature)
 
-- **Routing Policies – Simple**
+- **1 -Routing Policies – Simple**
 
     - Typically, route traffic to a single resource
     - Can specify multiple values in the same record
@@ -140,7 +140,7 @@
     - Can’t be associated with Health Checks
     ![Alt text](images/PolicySimple.png)
 
-- **Routing Policies – Weighted**
+- **2 -Routing Policies – Weighted**
 
     - Control the % of the requests that go to each specific resource
     - Assign each record a relative weight:
@@ -154,7 +154,7 @@
     ![Alt text](images/PolicyWeighted.png)
     (Instances of different weights here 10, 20, 70)  
 
-- **Routing Policies – Latency-based**
+- **3 -Routing Policies – Latency-based**
 
     - Redirect to the resource that has the least latency close to us
     - Super helpful when latency for users is a priority
@@ -163,14 +163,91 @@
     - Can be associated with Health Checks (has a failover capability)
     ![Alt text](images/PolicyLatency.png)
 
-- **Route 53 – Health Checks**
+- **4 -Routing Policies – Failover (Active-Passive)**
 
-    - HTTP Health Checks are only for **public resources**
-    - Health Check => Automated DNS Failover:
-        1. Health checks that monitor an endpoint (application, server, other AWS resource)
-        2. Health checks that monitor other health checks (Calculated Health Checks)
-        3. Health checks that monitor CloudWatch Alarms (full control !!) – e.g., throttles of DynamoDB, alarms on RDS, custom metrics, ... (helpful for private resources)
-    - Health Checks are integrated with CW metric
+    ![Alt text](images/Failover.png)  
+    (Primary EC2 instance and a secondary instance for failover or disaster recovery)  
+    (The health check will be associated with the primary record and this is **mandatory**)  
+    (If the health check reports unhealthy then Route 53 will failover to the secondary record, and the secondary can be now associated with the health check but there can be only 1 primary and 1 secondary)  
+    (A record of type failover can be created at Route 53 with the record type as primary or secondary, and both record types should have the same name)  
+
+- **5 -Routing Policies – Geolocation**
+
+    - Different from Latency-based!
+    - **This routing is based on user location**
+    - Specify location by Continent, Country or by US State (if there’s overlapping, most precise location selected)
+    - Should create a **“Default”** record (in case there’s no match on location)
+    - Use cases: website localization, restrict content distribution, load balancing, ...
+    - Can be associated with Health Checks
+    ![Alt text](images/GeoLocation.png)
+    (If I have a German version of the app then all Germal users should be redirected to a particular IP and same for French users who will be redirected to the French version of the App and all other users will be presented the default English version)  
+    (We can again create records with the same name with traffic routed differently based on region)  
+
+- **6 -Routing Policies – Geoproximity**
+
+    - Route traffic to your resources based on the geographic location of users and resources
+    - Ability **to shift more traffic to resources based** on the defined **bias**
+    - To change the size of the geographic region, specify bias values:
+        - To expand (1 to 99) – more traffic to the resource
+        - To shrink (-1 to -99) – less traffic to the resource
+    - Resources can be:
+        - AWS resources (specify AWS region)
+        - Non-AWS resources (specify Latitude and Longitude)
+    - You must use Route 53 **Traffic Flow** to use this feature
+    ![Alt text](images/GeoProximity1.png)
+    (Here if there are 2 resources one in us-west-1 and another in us-east-1, both with bias 0, then if all users in the US are trying to access these resources, then there will be a line divinding both regions, and the users on the left will go to us-west-1 and the right will go to us-east-1) 
+    (Looks more like going to closest resource region based on the user location)  
+    ![Alt text](images/GeoProximity2.png)
+    (In the above example if the Bias is 0 for us-west-1 and 50 for us-east-1, then more users will be routed to us-east-1 because of the higher bias value)  
+    (Now the dividing line between the two will not be in the middle but more towards us-west-1)  
+    (Useful when you want t shift the traffic to a specific region)  
+
+- **7 -Routing Policies – IP-based Routing**
+
+    - **Routing is based on clients’ IP addresses**
+    - **You provide a list of CIDRs for your clients** and the corresponding endpoints/locations (user-IP-to-endpoint mappings)
+    - Use cases: Optimize performance, reduce network costs...(because you know the IP ahead of time)
+    - Example: If you know that you have a specific internet provider and they are using a specific CIDR of IP addresses then you can route end users from this particular ISP to a specific endpoint
+    ![Alt text](images/IPBasedRouting.png)
+    (In Route 53 define, 2 locations with 2 different CIDR blocks with IP ranges)  
+    (We will link these locations to a specific record, and then all CIDR blocks from one location will be routed to a partcular IP when they access example.com)  
+    (Based on the IP address range from where the request is coming it will be routed to a different EC2 instance)  
+
+- **8 -Routing Policies – Multi-Value**
+
+    - Use when routing traffic to multiple resources
+    - Route 53 return multiple values/resources
+    - Can be associated with Health Checks (return only values for healthy resources)
+    - Up to 8 healthy records are returned for each Multi-Value query sent by a client.
+    - **Multi-Value is not a substitute for having an ELB** (The idea is that its a client-side load balancing)
+    ![Alt text](images/MultiValue.png)  
+    (The client will choose from the multiple values returned by DNS)  
+    (Simple routing does not allow for health checks but the Multi-value does allow, so simiple routing can return unhealthy records too)    
+
+# Reduce Route 53 cost
+
+Route 53 charges are based on actual usage of the service for:
+  - Hosted zones
+  - Queries
+  - Health checks
+  - Domain names
+
+To reduce higher than expected Route 53 costs:
+  - Delete unused hosted zones
+  - Create alias records where possible
+  - Increase the Time to Live (TTL) for the records
+  - Review your traffic policy records: There's no charge for traffic policies that aren't associated with a DNS name through a policy record. Determine if the traffic policy records can be replaced with simple records or other routing policies.
+  - Review your Resolver endpoints: A Route 53 Resolver endpoint requires two or more IP addresses. Each IP address corresponds with one elastic network interface. Elastic network interfaces are charged at a rate of $0.125 per hour, per interface. Consolidate your endpoints using the shared mechanism rather than using individual endpoints.
+  - Review your health check: Health check charges are incurred based on their associated endpoints. Be sure to configure Evaluate Target Health (ETH) wherever possible as an alternative to health checks. This strategy helps avoid health check costs.
+
+# Route 53 – Health Checks
+
+- HTTP Health Checks are only for **public resources**
+- Health Check => Automated DNS Failover:
+    1. Health checks that monitor an endpoint (application, server, other AWS resource)
+    2. Health checks that monitor other health checks (Calculated Health Checks)
+    3. Health checks that monitor CloudWatch Alarms (full control !!) – e.g., throttles of DynamoDB, alarms on RDS, custom metrics, ... (helpful for private resources)
+- Health Checks are integrated with CW metric
     ![Alt text](images/HealthCheck1.png)
 
 - **Health Checks – Monitor an Endpoint**
@@ -205,73 +282,12 @@
     - The way to create health check for pricate resources is - You can create a **CloudWatch Metric** and associate a **CloudWatch Alarm**, then create a Health Check that checks the alarm itself.
     ![Alt text](images/HealthCheck4.png)
 
-- **Routing Policies – Failover (Active-Passive)**
+# Domain Registar vs. DNS Service
 
-    ![Alt text](images/Failover.png)  
-    (Primary EC2 instance and a secondary instance for failover or disaster recovery)  
-    (The health check will be associated with the primary record and this is **mandatory**)  
-    (If the health check reports unhealthy then Route 53 will failover to the secondary record, and the secondary can be now associated with the health check but there can be only 1 primary and 1 secondary)  
-    (A record of type failover can be created at Route 53 with the record type as primary or secondary, and both record types should have the same name)  
-
-- **Routing Policies – Geolocation**
-
-    - Different from Latency-based!
-    - **This routing is based on user location**
-    - Specify location by Continent, Country or by US State (if there’s overlapping, most precise location selected)
-    - Should create a **“Default”** record (in case there’s no match on location)
-    - Use cases: website localization, restrict content distribution, load balancing, ...
-    - Can be associated with Health Checks
-    ![Alt text](images/GeoLocation.png)
-    (If I have a German version of the app then all Germal users should be redirected to a particular IP and same for French users who will be redirected to the French version of the App and all other users will be presented the default English version)  
-    (We can again create records with the same name with traffic routed differently based on region)  
-
-- **Routing Policies – Geoproximity**
-
-    - Route traffic to your resources based on the geographic location of users and resources
-    - Ability **to shift more traffic to resources based** on the defined **bias**
-    - To change the size of the geographic region, specify bias values:
-        - To expand (1 to 99) – more traffic to the resource
-        - To shrink (-1 to -99) – less traffic to the resource
-    - Resources can be:
-        - AWS resources (specify AWS region)
-        - Non-AWS resources (specify Latitude and Longitude)
-    - You must use Route 53 **Traffic Flow** to use this feature
-    ![Alt text](images/GeoProximity1.png)
-    (Here if there are 2 resources one in us-west-1 and another in us-east-1, both with bias 0, then if all users in the US are trying to access these resources, then there will be a line divinding both regions, and the users on the left will go to us-west-1 and the right will go to us-east-1) 
-    (Looks more like going to closest resource region based on the user location)  
-    ![Alt text](images/GeoProximity2.png)
-    (In the above example if the Bias is 0 for us-west-1 and 50 for us-east-1, then more users will be routed to us-east-1 because of the higher bias value)  
-    (Now the dividing line between the two will not be in the middle but more towards us-west-1)  
-    (Useful when you want t shift the traffic to a specific region)  
-
-- **Routing Policies – IP-based Routing**
-
-    - **Routing is based on clients’ IP addresses**
-    - **You provide a list of CIDRs for your clients** and the corresponding endpoints/locations (user-IP-to-endpoint mappings)
-    - Use cases: Optimize performance, reduce network costs...(because you know the IP ahead of time)
-    - Example: If you know that you have a specific internet provider and they are using a specific CIDR of IP addresses then you can route end users from this particular ISP to a specific endpoint
-    ![Alt text](images/IPBasedRouting.png)
-    (In Route 53 define, 2 locations with 2 different CIDR blocks with IP ranges)  
-    (We will link these locations to a specific record, and then all CIDR blocks from one location will be routed to a partcular IP when they access example.com)  
-    (Based on the IP address range from where the request is coming it will be routed to a different EC2 instance)  
-
-- **Routing Policies – Multi-Value**
-
-    - Use when routing traffic to multiple resources
-    - Route 53 return multiple values/resources
-    - Can be associated with Health Checks (return only values for healthy resources)
-    - Up to 8 healthy records are returned for each Multi-Value query sent by a client.
-    - **Multi-Value is not a substitute for having an ELB** (The idea is that its a client-side load balancing)
-    ![Alt text](images/MultiValue.png)  
-    (The client will choose from the multiple values returned by DNS)  
-    (Simple routing does not allow for health checks but the Multi-value does allow, so simiple routing can return unhealthy records too)    
-
-- **Domain Registar vs. DNS Service**
-
-    - You buy or register your domain name with a Domain Registrar typically by paying annual charges (e.g., GoDaddy, Amazon Registrar Inc., ...)
-    - The Domain Registrar usually provides you with a DNS service to manage your DNS records
-    - But you can use another DNS service to manage your DNS records
-    - Example: purchase the domain from GoDaddy and use Route 53 to manage your DNS records
+- You buy or register your domain name with a Domain Registrar typically by paying annual charges (e.g., GoDaddy, Amazon Registrar Inc., ...)
+- The Domain Registrar usually provides you with a DNS service to manage your DNS records
+- But you can use another DNS service to manage your DNS records
+- Example: purchase the domain from GoDaddy and use Route 53 to manage your DNS records
     ![Alt text](images/DomainRegistar1.png)
 
     ![Alt text](images/DomainRegistar2.png)  
@@ -282,8 +298,17 @@
 
 - **3rd Party Registrar with Amazon Route 53**
 
-    - **If you buy your domain on a 3rd par ty registrar, you can still use Route 53 as the DNS Service provider**
-    1. Create a Hosted Zone in Route 53
-    2. Update NS Records on 3rd party website to use Route 53 Name Servers
+    - **If you buy your domain on a 3rd party registrar, you can still use Route 53 as the DNS Service provider**
+        - 1 -Create a Hosted Zone in Route 53
+        - 2 -Update NS Records on 3rd party website to use Route 53 Name Servers
     - **Domain Registrar != DNS Service**
     - But every Domain Registrar usually comes with some DNS features
+
+**DNS hostnames and DNS resolution are required settings for private hosted zones**. DNS queries for private hosted zones can be resolved by the Amazon-provided VPC DNS server only. As a result, these options must be enabled for your private hosted zone to work.
+
+**DNS hostnames**: For non-default virtual private clouds that aren't created using the Amazon VPC wizard, this option is disabled by default. If you create a private hosted zone for a domain and create records in the zone without enabling DNS hostnames, private hosted zones aren't enabled. To use a private hosted zone, this option must be enabled.
+
+**DNS resolution**: Private hosted zones accept DNS queries only from a VPC DNS server. The IP address of the VPC DNS server is the reserved IP address at the base of the VPC IPv4 network range plus two. Enabling DNS resolution allows you to use the VPC DNS server as a Resolver for performing DNS resolution. Keep this option disabled if you're using a custom DNS server in the DHCP Options set, and you're not using a private hosted zone.  
+  - When you create a hosted zone, Amazon Route 53 automatically creates a **name server (NS)** record and a **start of authority (SOA)** record for the zone for public hosted zone. (Not for private hosted zones)  
+  - If you have private and public hosted zones that have overlapping namespaces, such as example.com and accounting.example.com, then the Resolver routes traffic based on the most specific match.  
+  - If you have a private hosted zone (example.com) and a Resolver rule that routes traffic to your network for the same domain name, the Resolver rule takes precedence.   

@@ -24,6 +24,13 @@
   - They **do not apply to the management account (full admin power)**
   - Must have an explicit allow (does not allow anything by default - like IAM)
 
+- **Service control policy (SCP)**
+  - Available only in an organization that has all features enabled. (not for consolidated billing feature)
+  - SCPs affect only *member* accounts in the organization. They have no effect on users or roles in the *management* account.
+  - SCPs *affect only IAM users and roles* that are managed by accounts that are part of the organization. SCPs don't affect resource-based policies directly.
+  - SCPs affect all users and roles in attached accounts, *including the root user*.
+  - SCPs *do not affect any service-linked role*. Service-linked roles enable other AWS services to integrate with AWS Organizations and can't be restricted by SCPs.
+
   ![Alt text](images/SCP_Hierarcy.png)
   (Very common to FullAWSAcess to root OU, so all account within it will have full permissions)  
   (Even if SCP applied to Mgmt account, they can do anything as no SCPs apply to them)  
