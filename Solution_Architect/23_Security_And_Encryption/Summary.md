@@ -62,7 +62,7 @@
 
 # Inspector
 
-  - service that allows you to run Automated Security Accessments on following:
+  - Service that allows you to run Automated Security Accessments on following:
     - For EC2 instances
       - leveraging the **SSM (Systems Manager) agent**.
       - Inspector will analyze against **unintended network accessibility**
@@ -71,7 +71,7 @@
     - For Container Images push to Amazon ECR
       - Assessment on Container images as they are pushed, against known vulnerabilities.
     - For Lambda functions
-      - Identifies software vulnerabilities in fucntion code and package dependencies.
+      - Identifies software vulnerabilities in function code and package dependencies.
       - Assessment of functions as they are deployed.
 
   - Reporting & Integration with AWS Security Hub

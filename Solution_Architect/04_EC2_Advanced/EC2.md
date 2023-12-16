@@ -98,6 +98,7 @@
 	- The instance boot is much faster! (the OS is not stopped / restarted)
 	- Under the hood: the RAM state is written to a file in the root EBS volume
     - The processes that were previously running on the instance are resumed
+    - Previously attached data volumes are reattached and the instance retains its instance ID
 	- The root EBS volume must be encrypted
     - The EBS volume should have enough space to contain the RAM
 	- **Use cases**:

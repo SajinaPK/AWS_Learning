@@ -55,6 +55,9 @@
         - Example: you can’t create CNAME for for example.com, but you can create for www.example.com
     - NS – Name Servers for the Hosted Zone (DNS names / IP address of the servers that responds to the DNS queries of your hosted zone)  
         - Control how traffic is routed for a domain
+    - PTR -  resolves an IP address to a fully-qualified domain name (FQDN) as an opposite to what A record does.
+        - Also called Reverse DNS records
+        - Cannot be used to map one domain name to another
 
 - **Route 53 – Hosted Zones**
     - A container for records that define how to route traffic to a domain and its subdomains
